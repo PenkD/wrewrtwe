@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <link rel="icon" href="favicon.png" type="image/png">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
 body {
   margin: 0;
   height: 100vh;
@@ -54,7 +55,14 @@ body.dark .card {
   color: #eee;
 }
 
-.card h1 { margin: 10px 0; font-size: 3rem; color: #ff3c3c; }
+
+.card h1 {
+  margin: 10px 0;
+  font-size: 4rem;
+  font-family: 'Fredoka One', cursive; 
+  color: #ff3c3c;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
 .card p { font-size: 1.5rem; margin: 20px 0 40px; }
 
 .btn {
@@ -115,7 +123,7 @@ body.dark .particle { background: rgba(255,150,150,0.8); }
 <body>
   <div class="card" id="tiltCard">
     <h1>404</h1>
-    <p>Oops! Page not found.</p>
+    <p>Oops! How did we get here?</p>
     <button class="btn" onclick="location.href='/'">Go Home</button>
   </div>
 
@@ -168,7 +176,7 @@ body.dark .particle { background: rgba(255,150,150,0.8); }
     }
     createParticles(30);
 
-    const titleText = "404 - Page Not Found";
+    const titleText = "404 :/";
     let titleIndex = 0;
     let forward = true;
 
