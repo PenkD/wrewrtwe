@@ -1,72 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Page Not Found</title>
-  <style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Page Not Found</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link rel="icon" href="favicon.png" type="image/png">
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+  perspective: 1000px;
+  transition: color 0.5s;
+  background-size: 800% 800%;
+  animation: gradientMove 15s ease infinite;
+  background-image: linear-gradient(270deg, #ff7eb3, #65d6ce, #f6d365, #a18cd1);
+}
 
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #0d0d0d; 
-      color: #e0e0e0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-    }
+body.dark {
+  background-image: linear-gradient(270deg, #0f0c29, #302b63, #24243e, #4b0c7c, #1c1b2a, #3d1e6d);
+}
 
-    h1 {
-      font-size: 6em;
-      margin: 0;
-      color: #ff3c3c; 
-      animation: pulse 1.5s infinite;
-    }
+@keyframes gradientMove {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
 
-    p {
-      font-size: 1.5em;
-      margin: 20px 0;
-    }
+.card {
+  width: 350px;
+  padding: 25px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  text-align: center;
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease, background 0.5s, color 0.5s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-    a {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #1a1a1a;
-      color: #00ffff;
-      text-decoration: none;
-      border-radius: 8px;
-      transition: 0.3s;
-    }
+body.dark .card {
+  background: rgba(30,30,30,0.9);
+  color: #eee;
+}
 
-    a:hover {
-      background: #00ffff;
-      color: #0d0d0d;
-    }
+.card h1 { margin: 10px 0; font-size: 1.8rem; }
+.card p { font-size: 1rem; margin: 10px 0 20px; }
 
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+  width: 100%;
+}
 
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
+.btn {
+  flex: 1;
+  padding: 10px;
+  background: linear-gradient(135deg, #65d6ce, #ff7eb3);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s;
+}
 
+.btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+.btn:active { transform: translateY(2px) scale(0.95); box-shadow: none; }
 
-    .floating {
-      animation: float 3s ease-in-out infinite;
-    }
+.dark-toggle {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(255,255,255,0.8);
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: background 0.3s, color 0.3s;
+}
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-20px); }
-    }
-  </style>
+body.dark .dark-toggle {
+  background: rgba(50,50,50,0.8);
+  color: #fff;
+}
+
+.about-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #65d6ce, #ff7eb3);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s;
+}
+
+.about-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
+.about-btn:active { transform: translateY(1px) scale(0.95); box-shadow: none; }
+
+.particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: float 4s ease-in-out infinite;
+}
+
+body.dark .particle { background: rgba(200,200,255,0.8); }
+
+@keyframes float {
+  0% {transform: translateY(0px);}
+  50% {transform: translateY(-15px);}
+  100% {transform: translateY(0px);}
+}
+</style>
 </head>
 <body>
-  <h1 class="floating">404</h1>
-  <p>Oops! This page doesn’t exist.</p>
-  <a href="/">Return Home</a>
+  <button class="about-btn" onclick="location.href='/'">Home</button>
+  <div class="card" id="tiltCard">
+    <h1>404</h1>
+    <p>Oops! Page not found.</p>
+    <div class="buttons">
+      <button class="btn" onclick="location.href='/'">Go Home</button>
+      <button class="btn" onclick="location.href='/about'">About</button>
+    </div>
+  </div>
+
+  <button class="dark-toggle" id="darkToggle"><i class="fas fa-moon"></i></button>
+
+  <script>
+    const tiltCard = document.getElementById('tiltCard');
+    const body = document.body;
+    const darkToggle = document.getElementById('darkToggle');
+
+
+    tiltCard.addEventListener('mousemove', e => {
+      const rect = tiltCard.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const rotateX = ((y - rect.height/2)/(rect.height/2)) * -15;
+      const rotateY = ((x - rect.width/2)/(rect.width/2)) * 15;
+      tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+    });
+
+    tiltCard.addEventListener('mouseleave', () => {
+      tiltCard.style.transition = 'transform 0.5s ease';
+      tiltCard.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+      setTimeout(() => tiltCard.style.transition='',500);
+    });
+
+
+    document.addEventListener('mousemove', e => {
+      const xPercent = e.clientX / window.innerWidth - 0.5;
+      const yPercent = e.clientY / window.innerHeight - 0.5;
+      const moveX = xPercent * 40;
+      const moveY = yPercent * 40;
+      body.style.backgroundPosition = `${50 + moveX}% ${50 + moveY}%`;
+    });
+
+
+    darkToggle.addEventListener('click', () => {
+      body.classList.toggle('dark');
+    });
+
+
+    function createParticles(count){
+      for(let i=0;i<count;i++){
+        const p=document.createElement('div');
+        p.classList.add('particle');
+        p.style.left=Math.random()*100+'vw';
+        p.style.top=Math.random()*100+'vh';
+        p.style.animationDuration=3+Math.random()*2+'s';
+        body.appendChild(p);
+      }
+    }
+    createParticles(25);
+
+
+    const titleText = "Page Not Found";
+    let titleIndex = 0;
+    let forward = true;
+
+    function animateTitle() {
+      let current = titleText.slice(0, titleIndex);
+      document.title = current || " "; 
+      if (forward) {
+        titleIndex++;
+        if (titleIndex > titleText.length) forward = false;
+      } else {
+        titleIndex--;
+        if (titleIndex < 0) forward = true;
+      }
+      setTimeout(animateTitle, 200);
+    }
+
+    animateTitle();
+  </script>
 </body>
 </html>
