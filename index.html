@@ -196,6 +196,27 @@ body.dark .particle { background: rgba(200,200,255,0.8); }
       }
     }
     createParticles(25);
+
+    // Tab title animation
+    const titleText = "Nefarious";
+    let titleIndex = 0;
+    let forward = true;
+
+    function animateTitle() {
+      let current = titleText.slice(0, titleIndex);
+      document.title = current || " "; // Avoid empty title issues
+
+      if (forward) {
+        titleIndex++;
+        if (titleIndex > titleText.length) forward = false;
+      } else {
+        titleIndex--;
+        if (titleIndex < 0) forward = true;
+      }
+      setTimeout(animateTitle, 200); // Adjust speed here
+    }
+
+    animateTitle();
   </script>
 </body>
 </html>
