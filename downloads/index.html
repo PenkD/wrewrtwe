@@ -21,7 +21,7 @@ body {
   justify-content: center;
   align-items: center;
 }
-body.dark { background-image: linear-gradient(270deg, #0f0c29, #302b63, #24243e, #4b0c7c, #1c1b2a, #3d1e6d); }
+body.dark { background-image: linear-gradient(270deg, #2e0000, #660000, #990000, #cc0000); }
 
 @keyframes gradientMove {
   0% {background-position: 0% 50%;}
@@ -42,7 +42,7 @@ body.dark { background-image: linear-gradient(270deg, #0f0c29, #302b63, #24243e,
   align-items: center;
   position: relative;
 }
-body.dark .card { background: rgba(30,30,30,0.85); color: #eee; }
+body.dark .card { background: rgba(50,0,0,0.85); color: #eee; }
 
 .card h1 { margin: 10px 0; font-size: 2rem; }
 .card p { font-size: 1rem; margin: 0 0 20px; }
@@ -87,25 +87,6 @@ body.dark .card { background: rgba(30,30,30,0.85); color: #eee; }
   font-size: 1rem;
 }
 
-.dark-toggle {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background: rgba(255,255,255,0.8);
-  border: none;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  transition: background 0.3s, color 0.3s;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-body.dark .dark-toggle { background: rgba(50,50,50,0.8); color: #fff; }
-
 .about-btn {
   position: fixed;
   top: 20px;
@@ -132,7 +113,7 @@ body.dark .dark-toggle { background: rgba(50,50,50,0.8); color: #fff; }
   pointer-events: none;
   animation: float 4s ease-in-out infinite;
 }
-body.dark .particle { background: rgba(200,200,255,0.8); }
+body.dark .particle { background: rgba(255,150,150,0.8); }
 
 @keyframes float {
   0% {transform: translateY(0px);}
@@ -170,12 +151,10 @@ body.dark .particle { background: rgba(200,200,255,0.8); }
   </div>
 </div>
 
-<button class="dark-toggle" id="darkToggle"><i class="fas fa-moon"></i></button>
-
+<script src="darkmode.js"></script>
 <script>
 const tiltCard = document.getElementById('tiltCard');
 const body = document.body;
-
 tiltCard.addEventListener('mousemove', e => {
   const rect = tiltCard.getBoundingClientRect();
   const x = e.clientX - rect.left;
@@ -189,7 +168,6 @@ tiltCard.addEventListener('mouseleave', () => {
   tiltCard.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
   setTimeout(() => tiltCard.style.transition='',500);
 });
-
 document.addEventListener('mousemove', e => {
   const xPercent = e.clientX / window.innerWidth - 0.5;
   const yPercent = e.clientY / window.innerHeight - 0.5;
@@ -197,7 +175,6 @@ document.addEventListener('mousemove', e => {
   const moveY = yPercent * 40;
   body.style.backgroundPosition = `${50 + moveX}% ${50 + moveY}%`;
 });
-
 function createParticles(count){
   for(let i=0;i<count;i++){
     const p=document.createElement('div');
@@ -209,10 +186,6 @@ function createParticles(count){
   }
 }
 createParticles(25);
-
-const darkToggle = document.getElementById('darkToggle');
-darkToggle.addEventListener('click', () => { body.classList.toggle('dark'); });
-
 const searchInput = document.getElementById('searchInput');
 const downloadsContainer = document.getElementById('downloadsContainer');
 searchInput.addEventListener('input', () => {
