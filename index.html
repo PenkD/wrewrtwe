@@ -41,7 +41,6 @@ body.dark {
   text-align: center;
   transform-style: preserve-3d;
   transition: transform 0.1s ease, background 0.5s, color 0.5s;
-  cursor: pointer;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -74,7 +73,7 @@ body.dark .card {
   border-radius: 12px;
   font-size: 1rem;
   font-weight: bold;
-  cursor: hand;
+  cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s;
 }
 
@@ -96,10 +95,7 @@ body.dark .card {
   transition: background 0.3s, color 0.3s;
 }
 
-body.dark .dark-toggle {
-  background: rgba(50,50,50,0.8);
-  color: #fff;
-}
+body.dark .dark-toggle { background: rgba(50,50,50,0.8); color: #fff; }
 
 .about-btn {
   position: fixed;
@@ -141,13 +137,13 @@ body.dark .particle { background: rgba(200,200,255,0.8); }
 <body>
   <button class="about-btn" id="aboutBtn" onclick="location.href='/about'">About</button>
   <div class="card" id="tiltCard">
-    <h1>Hi,  </h1>
+    <h1>Hi,</h1>
     <p>i forgot</p>
     <div class="buttons">
       <button class="btn" onclick="location.href='/downloads'">Downloads</button>
-      <button class="btn">Two</button>
-      <button class="btn">Three</button>
-      <button class="btn">Four</button>
+      <button class="btn" onclick="location.href='/two'">Two</button>
+      <button class="btn" onclick="location.href='/three'">Three</button>
+      <button class="btn" onclick="location.href='/four'">Four</button>
     </div>
   </div>
 
@@ -192,15 +188,13 @@ body.dark .particle { background: rgba(200,200,255,0.8); }
     }
     createParticles(25);
 
-
     const titleText = "Nefarious";
     let titleIndex = 0;
     let forward = true;
 
     function animateTitle() {
       let current = titleText.slice(0, titleIndex);
-      document.title = current || " "; 
-
+      document.title = current || " ";
       if (forward) {
         titleIndex++;
         if (titleIndex > titleText.length) forward = false;
@@ -208,12 +202,11 @@ body.dark .particle { background: rgba(200,200,255,0.8); }
         titleIndex--;
         if (titleIndex < 0) forward = true;
       }
-      setTimeout(animateTitle, 200); 
+      setTimeout(animateTitle, 200);
     }
 
     animateTitle();
   </script>
-
 
   <script src="darkmode.js"></script>
 </body>
