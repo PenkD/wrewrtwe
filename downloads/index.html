@@ -45,6 +45,7 @@ body.dark { background-image: linear-gradient(270deg, #0f0c29, #302b63, #24243e,
 body.dark .card { background: rgba(30,30,30,0.85); color: #eee; }
 
 .card h1 { margin: 10px 0; font-size: 2rem; }
+.card p { font-size: 1rem; margin: 0 0 15px; }
 
 .downloads {
   display: flex;
@@ -86,6 +87,24 @@ body.dark .card { background: rgba(30,30,30,0.85); color: #eee; }
   font-size: 1rem;
 }
 
+.dark-toggle {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(255,255,255,0.8);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body.dark .dark-toggle { background: rgba(50,50,50,0.8); color: #fff; }
+
 .about-btn {
   position: fixed;
   top: 20px;
@@ -100,26 +119,8 @@ body.dark .card { background: rgba(30,30,30,0.85); color: #eee; }
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.about-btn:hover { transform: translateY(-2px) box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
+.about-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
 .about-btn:active { transform: translateY(1px) scale(0.95); box-shadow: none; }
-
-.dark-toggle {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background: rgba(255,255,255,0.8);
-  border: none;
-  border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-body.dark .dark-toggle { background: rgba(50,50,50,0.8); color: #fff; }
 
 .particle {
   position: absolute;
@@ -141,7 +142,6 @@ body.dark .particle { background: rgba(200,200,255,0.8); }
 </head>
 <body>
 <button class="about-btn" onclick="location.href='https://nefarious.site'">Home</button>
-<button class="dark-toggle" id="darkToggle"><i class="fas fa-moon"></i></button>
 <div class="card" id="tiltCard">
   <h1>Downloads</h1>
   <input type="text" class="search-input" placeholder="Search downloads..." id="searchInput">
@@ -169,7 +169,8 @@ body.dark .particle { background: rgba(200,200,255,0.8); }
   </div>
 </div>
 
-<script src="darkmode.js"></script>
+<button class="dark-toggle" id="darkToggle"><i class="fas fa-moon"></i></button>
+
 <script>
 const tiltCard = document.getElementById('tiltCard');
 const body = document.body;
@@ -186,6 +187,7 @@ tiltCard.addEventListener('mouseleave', () => {
   tiltCard.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
   setTimeout(() => tiltCard.style.transition='',500);
 });
+
 document.addEventListener('mousemove', e => {
   const xPercent = e.clientX / window.innerWidth - 0.5;
   const yPercent = e.clientY / window.innerHeight - 0.5;
@@ -193,6 +195,7 @@ document.addEventListener('mousemove', e => {
   const moveY = yPercent * 40;
   body.style.backgroundPosition = `${50 + moveX}% ${50 + moveY}%`;
 });
+
 function createParticles(count){
   for(let i=0;i<count;i++){
     const p=document.createElement('div');
@@ -205,4 +208,20 @@ function createParticles(count){
 }
 createParticles(25);
 
-const searchInput = document.get
+const darkToggle = document.getElementById('darkToggle');
+darkToggle.addEventListener('click', () => { body.classList.toggle('dark'); });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('searchInput');
+  const downloadsContainer = document.getElementById('downloadsContainer');
+  searchInput.addEventListener('input', () => {
+    const filter = searchInput.value.toLowerCase();
+    Array.from(downloadsContainer.children).forEach(btn => {
+      const text = btn.querySelector('span').textContent.toLowerCase();
+      btn.style.display = text.includes(filter) ? 'flex' : 'none';
+    });
+  });
+});
+</script>
+</body>
+</html>
