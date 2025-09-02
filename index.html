@@ -156,7 +156,6 @@ body.dark .particle { background: rgba(200,200,255,0.8); }
   <script>
     const tiltCard = document.getElementById('tiltCard');
     const body = document.body;
-    const darkToggle = document.getElementById('darkToggle');
 
     tiltCard.addEventListener('mousemove', e => {
       const rect = tiltCard.getBoundingClientRect();
@@ -181,10 +180,6 @@ body.dark .particle { background: rgba(200,200,255,0.8); }
       body.style.backgroundPosition = `${50 + moveX}% ${50 + moveY}%`;
     });
 
-    darkToggle.addEventListener('click', () => {
-      body.classList.toggle('dark');
-    });
-
     function createParticles(count){
       for(let i=0;i<count;i++){
         const p=document.createElement('div');
@@ -197,14 +192,14 @@ body.dark .particle { background: rgba(200,200,255,0.8); }
     }
     createParticles(25);
 
-    // Tab title animation
+
     const titleText = "Nefarious";
     let titleIndex = 0;
     let forward = true;
 
     function animateTitle() {
       let current = titleText.slice(0, titleIndex);
-      document.title = current || " "; // Avoid empty title issues
+      document.title = current || " "; 
 
       if (forward) {
         titleIndex++;
@@ -213,10 +208,13 @@ body.dark .particle { background: rgba(200,200,255,0.8); }
         titleIndex--;
         if (titleIndex < 0) forward = true;
       }
-      setTimeout(animateTitle, 200); // Adjust speed here
+      setTimeout(animateTitle, 200); 
     }
 
     animateTitle();
   </script>
+
+
+  <script src="darkmode.js"></script>
 </body>
 </html>
