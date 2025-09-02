@@ -34,8 +34,8 @@ body.dark {
 }
 
 .card {
-  width: 700px;   
-  padding: 50px;  
+  width: 700px;
+  padding: 50px;
   background: rgba(255,255,255,0.9);
   border-radius: 25px;
   box-shadow: 0 25px 50px rgba(0,0,0,0.3);
@@ -55,7 +55,6 @@ body.dark .card {
   color: #eee;
 }
 
-
 .card h1 {
   margin: 10px 0;
   font-size: 4rem;
@@ -63,6 +62,7 @@ body.dark .card {
   color: #ff3c3c;
   text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
 }
+
 .card p { font-size: 1.5rem; margin: 20px 0 40px; }
 
 .btn {
@@ -96,10 +96,7 @@ body.dark .card {
   transition: background 0.3s, color 0.3s;
 }
 
-body.dark .dark-toggle {
-  background: rgba(50,50,50,0.8);
-  color: #fff;
-}
+body.dark .dark-toggle { background: rgba(50,50,50,0.8); color: #fff; }
 
 .particle {
   position: absolute;
@@ -132,8 +129,6 @@ body.dark .particle { background: rgba(255,150,150,0.8); }
   <script>
     const tiltCard = document.getElementById('tiltCard');
     const body = document.body;
-    const darkToggle = document.getElementById('darkToggle');
-
 
     tiltCard.addEventListener('mousemove', e => {
       const rect = tiltCard.getBoundingClientRect();
@@ -150,7 +145,6 @@ body.dark .particle { background: rgba(255,150,150,0.8); }
       setTimeout(() => tiltCard.style.transition='',500);
     });
 
-
     document.addEventListener('mousemove', e => {
       const xPercent = e.clientX / window.innerWidth - 0.5;
       const yPercent = e.clientY / window.innerHeight - 0.5;
@@ -158,11 +152,6 @@ body.dark .particle { background: rgba(255,150,150,0.8); }
       const moveY = yPercent * 40;
       body.style.backgroundPosition = `${50 + moveX}% ${50 + moveY}%`;
     });
-
-    darkToggle.addEventListener('click', () => {
-      body.classList.toggle('dark');
-    });
-
 
     function createParticles(count){
       for(let i=0;i<count;i++){
@@ -195,5 +184,7 @@ body.dark .particle { background: rgba(255,150,150,0.8); }
 
     animateTitle();
   </script>
+
+  <script src="darkmode.js"></script>
 </body>
 </html>
