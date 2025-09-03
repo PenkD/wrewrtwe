@@ -205,7 +205,7 @@ body {
   box-sizing:border-box;
 }
 
-/* DRAGGABLE APP WINDOWS */
+/* APP WINDOW HEADER */
 .window-header {
   width:100%;
   height:35px;
@@ -342,7 +342,7 @@ function playClickSound(){
   clickSound.play();
 }
 
-// WIDGET DRAGGING BASED ON HEADER (like mydivheader)
+// WIDGET DRAGGING BASED ON HEADER
 const widgets = document.querySelectorAll('.widget');
 widgets.forEach(widget => {
   dragElement(widget, widget.querySelector('.widget-header'));
@@ -392,11 +392,12 @@ darkToggle.addEventListener('click', () => {
   playClickSound();
 });
 
-// OPEN APP WINDOWS
+// OPEN APP WINDOWS WITH DRAGGABLE HEADER
 function makeDraggable(el){
   const header = el.querySelector('.window-header');
   let offsetX, offsetY, isDragging=false;
   let iframe = el.querySelector('iframe');
+
   header.addEventListener('mousedown', e => {
     isDragging = true;
     offsetX = e.clientX - el.offsetLeft;
@@ -436,6 +437,7 @@ function openApp(url){
   `;
   document.body.appendChild(appWindow);
   makeDraggable(appWindow);
+
   appWindow.style.transform='scale(0.9) translateY(-20px)';
   appWindow.style.opacity='0';
   setTimeout(()=>{
@@ -456,7 +458,6 @@ document.addEventListener('click', () => {
 
 // ADD CLICK SOUND TO ALL BUTTONS
 document.querySelectorAll('button').forEach(btn => btn.addEventListener('click', playClickSound));
-
 </script>
 </body>
 </html>
