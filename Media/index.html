@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Media Player — Nefarious</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+      perspective: 1000px;
+      background-size: 800% 800%;
+      animation: gradientMove 15s ease infinite;
+      background-image: linear-gradient(270deg, #ff7eb3, #65d6ce, #f6d365, #a18cd1);
+    }
+    body.dark {
+      background-image: linear-gradient(270deg, #0f0c29, #302b63, #24243e, #4b0c7c);
+      color: #eee;
+    }
+    @keyframes gradientMove {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+    .card {
+      width: 400px;
+      padding: 30px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    body.dark .card {
+      background: rgba(30,30,30,0.9);
+    }
+    .btn {
+      padding: 12px 18px;
+      margin-top: 15px;
+      background: linear-gradient(135deg, #65d6ce, #ff7eb3);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn:hover {transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.2);}
+    #playerView {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+    #albumArt {
+      width: 300px;
+      height: 300px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      object-fit: cover;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    }
+    .controls button {
+      margin: 0 10px;
+      background: rgba(255,255,255,0.8);
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    body.dark .controls button {background: rgba(50,50,50,0.8); color: #fff;}
+  </style>
+</head>
+<body>
+  <div class="card" id="setupView">
+    <h1>Select Your Music</h1>
+    <input type="file" id="fileInput" multiple accept="audio/*" class="btn"/>
+    <button class="btn" id="startBtn">Start Listening</button>
+  </div>
+
+  <div class="card" id="playerView">
+    <img id="albumArt" src="" alt="Album Art">
+    <h2 id="trackTitle">Track Title</h2>
+    <p id="trackArtist">Artist</p>
+    <div class="controls">
+      <button id="prevBtn"><i class="fas fa-backward"></i></button>
+      <button id="playPauseBtn"><i class="fas fa-play"></i></button>
+      <button id="nextBtn"><i class="fas fa-forward"></i></button>
+    </div>
+  </div>
+
+  <audio id="audioPlayer"></audio>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const startBtn = document.getElementById('startBtn');
+    const setupView = document.getElementById('setupView');
+    const playerView = document.getElementById('playerView');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const albumArt = document.getElementById('albumArt');
+    const trackTitle = document.getElementById('trackTitle');
+    const trackArtist = document.getElementById('trackArtist');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let playlist = [];
+    let currentIndex = 0;
+
+    startBtn.addEventListener('click', () => {
+      if (fileInput.files.length > 0) {
+        playlist = Array.from(fileInput.files);
+        currentIndex = 0;
+        setupView.style.display = 'none';
+        playerView.style.display = 'flex';
+        loadTrack(currentIndex);
+      }
+    });
+
+    function loadTrack(index) {
+      const file = playlist[index];
+      audioPlayer.src = URL.createObjectURL(file);
+      trackTitle.textContent = file.name.replace(/\.[^/.]+$/, "");
+      trackArtist.textContent = 'Unknown Artist';
+      albumArt.src = 'favicon.png'; 
+      audioPlayer.play();
+      playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    }
+
+    playPauseBtn.addEventListener('click', () => {
+      if (audioPlayer.paused) {
+        audioPlayer.play();
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      } else {
+        audioPlayer.pause();
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % playlist.length;
+      loadTrack(currentIndex);
+    });
+
+    prevBtn.addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+      loadTrack(currentIndex);
+    });
+  </script>
+</body>
+</html>
