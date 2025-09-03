@@ -1,243 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Welcome,</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-<link rel="icon" href="favicon.png" type="image/png">
-<style>
-/* GENERAL STYLES */
-body {
-  margin:0;
-  height:100vh;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(270deg, #ff7eb3, #65d6ce, #f6d365, #a18cd1);
-  background-size:800% 800%;
-  animation: gradientMove 15s ease infinite;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  transition: background 0.5s, color 0.5s;
-}
-@keyframes gradientMove {
-  0% {background-position:0% 50%;}
-  50% {background-position:100% 50%;}
-  100% {background-position:0% 50%;}
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome,</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <style>
+    /* GENERAL STYLES */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #2c3e50, #3498db);
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+      transition: background-position 0.1s ease;
+    }
+    body.dark {
+      background: linear-gradient(135deg, #1a1a1a, #333);
+    }
 
-/* APPLE GLASS WINDOWS */
-.window {
-  flex: 1;
-  margin: 20px;
-  border-radius: 30px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(30px) saturate(200%);
-  -webkit-backdrop-filter: blur(30px) saturate(200%);
-  border: 1px solid rgba(255,255,255,0.3);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.15), inset 0 0 50px rgba(255,255,255,0.1);
-  position: relative;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  overflow:hidden;
-  transition: all 0.3s ease;
-}
-.window::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(120deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.2) 100%);
-  transform: rotate(25deg) translateX(-100%);
-  animation: shine 3s infinite;
-  pointer-events: none;
-}
-@keyframes shine {
-  0% { transform: rotate(25deg) translateX(-100%); }
-  100% { transform: rotate(25deg) translateX(100%); }
-}
+    .window {
+      width: 400px;
+      height: 300px;
+      background: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      position: absolute;
+      top: 100px;
+      left: 100px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
 
-/* TASKBAR */
-.taskbar {
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  height:60px;
-  background: rgba(255,255,255,0.2);
-  backdrop-filter: blur(20px);
-  display:flex;
-  align-items:center;
-  padding:0 20px;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
-  justify-content:space-between;
-}
-.taskbar-left, .taskbar-right {
-  display:flex;
-  align-items:center;
-}
-.taskbar button {
-  margin-right:15px;
-  padding:8px 15px;
-  border:none;
-  border-radius:12px;
-  background: linear-gradient(135deg, #65d6ce, #ff7eb3);
-  color:#fff;
-  font-weight:bold;
-  cursor:pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  position:relative;
-}
-.taskbar button:hover {
-  transform: translateY(-10px) scale(1.1);
-  box-shadow:0 10px 20px rgba(0,0,0,0.4);
-  z-index:10;
-}
+    .widget {
+      width: 100px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid #fff;
+      border-radius: 15px;
+      text-align: center;
+      line-height: 100px;
+      color: #fff;
+      cursor: grab;
+      position: absolute;
+      user-select: none;
+    }
 
-/* START MENU */
-#startMenu {
-  position:fixed;
-  bottom:60px;
-  left:10px;
-  width:250px;
-  background: rgba(255,255,255,0.9);
-  border:2px solid #ff7eb3;
-  border-radius:12px;
-  display:none;
-  flex-direction:column;
-  padding:10px;
-  backdrop-filter: blur(10px);
-  box-shadow:0 5px 20px rgba(0,0,0,0.5);
-  transition: background 0.5s, border 0.5s, transform 0.3s ease, opacity 0.3s ease;
-  transform-origin: bottom left;
-  opacity:0;
-}
-#startMenu.show {
-  display:flex;
-  opacity:1;
-  transform: scale(1) translateY(0);
-}
-#startMenu .profile {
-  display:flex;
-  align-items:center;
-  padding:10px;
-  margin-bottom:10px;
-  border-bottom:1px solid #ff7eb3;
-}
-#startMenu .profile img {
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  margin-right:10px;
-}
-#startMenu .profile span {
-  font-weight:bold;
-  color:#000;
-}
-#startMenu .profile button {
-  margin-left:auto;
-  background:none;
-  border:none;
-  font-size:18px;
-  cursor:pointer;
-  color:#000;
-  transition: color 0.3s;
-}
-#startMenu button {
-  margin:5px 0;
-  padding:8px 15px;
-  border:none;
-  border-radius:8px;
-  background: linear-gradient(135deg, #65d6ce, #ff7eb3);
-  color:#fff;
-  font-weight:bold;
-  cursor:pointer;
-  text-align:left;
-  transition: background 0.2s, transform 0.2s;
-}
-#startMenu button:hover { background: linear-gradient(135deg, #ff7eb3, #65d6ce); transform:translateX(3px); }
+    #taskbar {
+      width: 100%;
+      height: 60px;
+      background: rgba(0, 0, 0, 0.7);
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      color: #fff;
+    }
 
-#clock {
-  font-weight:bold;
-  color:#fff;
-}
+    #startMenu {
+      position: fixed;
+      bottom: 60px;
+      left: 10px;
+      width: 300px;
+      height: 400px;
+      background: rgba(0, 0, 0, 0.9);
+      color: #fff;
+      border-radius: 10px;
+      display: none;
+      flex-direction: column;
+      padding: 10px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 999;
+    }
+    #startMenu.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-/* WIDGETS - APPLE GLASS FROST EFFECT */
-.widget {
-  position:absolute;
-  width:120px;
-  height:120px;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(20px) saturate(200%);
-  -webkit-backdrop-filter: blur(20px) saturate(200%);
-  border-radius:20px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  color:#fff;
-  font-weight:bold;
-  cursor:pointer;
-  user-select:none;
-  transition: background 0.3s, transform 0.2s;
-}
-.widget:hover {
-  background: rgba(255,255,255,0.25);
-  transform: scale(1.05);
-}
+    button {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      color: #fff;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
 
-/* DRAGGABLE APP WINDOWS */
-.window-header {
-  width:100%;
-  height:35px;
-  cursor:grab;
-  display:flex;
-  justify-content:flex-end;
-  align-items:center;
-  padding:0 10px;
-  box-sizing:border-box;
-}
-.close-btn {
-  font-size:24px;
-  width:35px;
-  height:35px;
-  line-height:35px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  transition: background 0.3s, color 0.3s;
-}
-.close-btn:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-/* DARK THEME */
-body.dark {
-  background: linear-gradient(270deg, #1a1a1a, #222, #333, #111);
-  color: #fff;
-}
-body.dark .window {
-  background: rgba(0,0,0,0.2);
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 0 50px rgba(255,255,255,0.05);
-}
-body.dark .widget {
-  background: rgba(255,255,255,0.15);
-}
-body.dark #startMenu {
-  background: rgba(0,0,0,0.9);
-  border:2px solid #65d6ce;
-}
-body.dark #startMenu .profile span,
-body.dark #startMenu .profile button,
-body.dark #startMenu button {
-  color:#fff;
-}
-body.dark .close-btn { color:#fff; background: rgba(255,255,255,0.1); }
-</style>
+    .window-header {
+      width: 100%;
+      height: 35px;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 20px 20px 0 0;
+      cursor: grab;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0 10px;
+      box-sizing: border-box;
+    }
+    .close-btn {
+      background: red;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
   <!-- Ambience Audio -->
@@ -250,178 +135,177 @@ body.dark .close-btn { color:#fff; background: rgba(255,255,255,0.1); }
     <div class="widget" id="widget2" style="top:50px; left:200px;">Widget 2</div>
     <div class="widget" id="widget3" style="top:50px; left:350px;">Widget 3</div>
   </div>
-  <!-- rest of your code -->
 
-
-  <h1>Welcome,</h1>
-  <p>Select an app from the taskbar or Start menu</p>
-  <div class="widget" id="widget1" style="top:50px; left:50px;">Widget 1</div>
-  <div class="widget" id="widget2" style="top:50px; left:200px;">Widget 2</div>
-  <div class="widget" id="widget3" style="top:50px; left:350px;">Widget 3</div>
-</div>
-
-<div id="startMenu">
-  <div class="profile">
-    <img src="Avatar.png" alt="Profile">
-    <span>Guest32k</span>
+  <!-- Taskbar -->
+  <div id="taskbar">
+    <button id="startBtn"><i class="fas fa-bars"></i> Start</button>
+    <div id="clock">00:00:00</div>
     <button id="darkToggle"><i class="fas fa-moon"></i></button>
   </div>
-  <button onclick="openApp('https://nefarious.site/downloads')"><i class="fas fa-download"></i> Downloads</button>
-  <button onclick="alert('Media Player opened')"><i class="fas fa-music"></i> Media Player</button>
-  <button onclick="alert('Three opened')"><i class="fas fa-folder"></i> Three</button>
-  <button onclick="alert('Four opened')"><i class="fas fa-cogs"></i> Four</button>
-</div>
 
-<div class="taskbar">
-  <div class="taskbar-left" id="taskbarApps">
-    <button id="startBtn"><i class="fas fa-windows"></i> Start</button>
+  <!-- Start Menu -->
+  <div id="startMenu">
+    <button onclick="openApp('https://example.com')">Example App</button>
+    <button onclick="openApp('https://nefarious.site')">My Site</button>
   </div>
-  <div class="taskbar-right">
-    <span id="clock"></span>
-  </div>
-</div>
 
-<script>
-// START MENU TOGGLE FIX
-const startBtn = document.getElementById('startBtn');
-const startMenu = document.getElementById('startMenu');
-startBtn.addEventListener('click', ()=>{
-  if(startMenu.classList.contains('show')){
-    startMenu.classList.remove('show');
-    setTimeout(()=> startMenu.style.display='none', 300);
-  } else {
-    startMenu.style.display='flex';
-    void startMenu.offsetWidth; // trigger reflow
-    startMenu.classList.add('show');
-  }
-});
-
-// CLOCK
-function updateClock(){
-  const now = new Date();
-  let hours = now.getHours();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12 || 12;
-  const minutes = now.getMinutes().toString().padStart(2,'0');
-  const seconds = now.getSeconds().toString().padStart(2,'0');
-  document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
-}
-setInterval(updateClock,1000);
-updateClock();
-
-// BACKGROUND MOVEMENT
-document.addEventListener('mousemove', e => {
-  const xPercent = e.clientX / window.innerWidth - 0.5;
-  const yPercent = e.clientY / window.innerHeight - 0.5;
-  const moveX = xPercent * 40;
-  const moveY = yPercent * 40;
-  document.body.style.backgroundPosition = `${50 + moveX}% ${50 + moveY}%`;
-});
-
-// WIDGET DRAG & CLICK
-const widgets = document.querySelectorAll('.widget');
-widgets.forEach(widget => {
-  let offsetX, offsetY, isDragging=false;
-  widget.addEventListener('mousedown', e => {
-    isDragging = true;
-    offsetX = e.clientX - widget.offsetLeft;
-    offsetY = e.clientY - widget.offsetTop;
-  });
-  document.addEventListener('mousemove', e => {
-    if(isDragging){
-      let newLeft = e.clientX - offsetX;
-      let newTop = e.clientY - offsetY;
-      newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - widget.offsetWidth));
-      newTop = Math.max(0, Math.min(newTop, window.innerHeight - widget.offsetHeight - 60));
-      widget.style.left = `${newLeft}px`;
-      widget.style.top = `${newTop}px`;
-    }
-  });
-  document.addEventListener('mouseup', () => { isDragging=false; });
-  widget.addEventListener('click', () => { alert(widget.textContent + ' clicked'); });
-});
-
-// THEME TOGGLE
-document.addEventListener("DOMContentLoaded", () => {
-  const darkToggle = document.getElementById('darkToggle');
-  const body = document.body;
-
-  if (localStorage.getItem('theme') === 'dark') body.classList.add('dark');
-
-  function updateIcon() {
-    if (!darkToggle) return;
-    darkToggle.innerHTML = body.classList.contains('dark') 
-      ? '<i class="fas fa-sun"></i>' 
-      : '<i class="fas fa-moon"></i>';
-  }
-  updateIcon();
-
-  if (darkToggle) {
-    darkToggle.addEventListener('click', () => {
-      body.classList.toggle('dark');
-      localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
-      updateIcon();
+  <script>
+    // START MENU TOGGLE
+    const startBtn = document.getElementById('startBtn');
+    const startMenu = document.getElementById('startMenu');
+    startBtn.addEventListener('click', () => {
+      if(startMenu.classList.contains('show')){
+        startMenu.classList.remove('show');
+        setTimeout(()=> startMenu.style.display='none', 300);
+      } else {
+        startMenu.style.display='flex';
+        void startMenu.offsetWidth; // trigger reflow
+        startMenu.classList.add('show');
+      }
     });
-  }
-});
 
-// OPEN APP WINDOW WITH DRAG & CLOSE BUTTON
-function makeDraggable(el){
-  const header = el.querySelector('.window-header');
-  let offsetX, offsetY, isDragging=false;
-  header.addEventListener('mousedown', e => {
-    isDragging = true;
-    offsetX = e.clientX - el.offsetLeft;
-    offsetY = e.clientY - el.offsetTop;
-    el.style.cursor = 'grabbing';
-  });
-  document.addEventListener('mousemove', e => {
-    if(isDragging){
-      el.style.left = Math.max(0, Math.min(e.clientX - offsetX, window.innerWidth - el.offsetWidth)) + 'px';
-      el.style.top = Math.max(0, Math.min(e.clientY - offsetY, window.innerHeight - el.offsetHeight - 60)) + 'px';
+    // CLOCK
+    function updateClock(){
+      const now = new Date();
+      let hours = now.getHours();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12;
+      const minutes = now.getMinutes().toString().padStart(2,'0');
+      const seconds = now.getSeconds().toString().padStart(2,'0');
+      document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
     }
-  });
-  document.addEventListener('mouseup', () => {
-    isDragging = false;
-    el.style.cursor = 'default';
-  });
-}
+    setInterval(updateClock,1000);
+    updateClock();
 
-function openApp(url){
-  const appWindow=document.createElement('div');
-  appWindow.classList.add('window');
-  appWindow.style.width='500px';
-  appWindow.style.height='400px';
-  appWindow.style.top='50px';
-  appWindow.style.left='50px';
-  appWindow.style.position='absolute';
-  appWindow.innerHTML=`
-    <div class="window-header">
-      <button class="close-btn" onclick="this.parentElement.parentElement.remove()">×</button>
-    </div>
-    <iframe src="${url}" style="width:100%; height:calc(100% - 35px); border:none; border-radius:0 0 20px 20px;"></iframe>
-  `;
-  document.body.appendChild(appWindow);
-  makeDraggable(appWindow);
+    // BACKGROUND MOVEMENT
+    document.addEventListener('mousemove', e => {
+      const xPercent = e.clientX / window.innerWidth - 0.5;
+      const yPercent = e.clientY / window.innerHeight - 0.5;
+      const moveX = xPercent * 40;
+      const moveY = yPercent * 40;
+      document.body.style.backgroundPosition = `${50 + moveX}% ${50 + moveY}%`;
+    });
 
-  appWindow.style.transform='scale(0.9) translateY(-20px)';
-  appWindow.style.opacity='0';
-  setTimeout(()=>{
-    appWindow.style.transition='all 0.3s ease';
-    appWindow.style.transform='scale(1) translateY(0)';
-    appWindow.style.opacity='1';
-  },10);
-}
+    // WIDGET DRAG & CLICK
+    const widgets = document.querySelectorAll('.widget');
+    widgets.forEach(widget => {
+      let offsetX, offsetY, isDragging=false;
+      widget.addEventListener('mousedown', e => {
+        isDragging = true;
+        offsetX = e.clientX - widget.offsetLeft;
+        offsetY = e.clientY - widget.offsetTop;
+      });
+      document.addEventListener('mousemove', e => {
+        if(isDragging){
+          let newLeft = e.clientX - offsetX;
+          let newTop = e.clientY - offsetY;
+          newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - widget.offsetWidth));
+          newTop = Math.max(0, Math.min(newTop, window.innerHeight - widget.offsetHeight - 60));
+          widget.style.left = `${newLeft}px`;
+          widget.style.top = `${newTop}px`;
+        }
+      });
+      document.addEventListener('mouseup', () => { isDragging=false; });
+      widget.addEventListener('click', () => { 
+        playClickSound();
+        alert(widget.textContent + ' clicked'); 
+      });
+    });
 
-  // Enable audio playback on first user interaction
-document.addEventListener('click', () => {
-  const ambience = document.getElementById('ambience');
-  if (ambience.muted) {
-    ambience.muted = false;
-    ambience.play();
-  }
-}, { once: true });
+    // THEME TOGGLE
+    document.addEventListener("DOMContentLoaded", () => {
+      const darkToggle = document.getElementById('darkToggle');
+      const body = document.body;
 
-</script>
+      if (localStorage.getItem('theme') === 'dark') body.classList.add('dark');
+
+      function updateIcon() {
+        if (!darkToggle) return;
+        darkToggle.innerHTML = body.classList.contains('dark') 
+          ? '<i class="fas fa-sun"></i>' 
+          : '<i class="fas fa-moon"></i>';
+      }
+      updateIcon();
+
+      if (darkToggle) {
+        darkToggle.addEventListener('click', () => {
+          body.classList.toggle('dark');
+          localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
+          updateIcon();
+          playClickSound();
+        });
+      }
+    });
+
+    // DRAGGABLE WINDOWS
+    function makeDraggable(el){
+      const header = el.querySelector('.window-header');
+      let offsetX, offsetY, isDragging=false;
+      header.addEventListener('mousedown', e => {
+        isDragging = true;
+        offsetX = e.clientX - el.offsetLeft;
+        offsetY = e.clientY - el.offsetTop;
+        el.style.cursor = 'grabbing';
+      });
+      document.addEventListener('mousemove', e => {
+        if(isDragging){
+          el.style.left = Math.max(0, Math.min(e.clientX - offsetX, window.innerWidth - el.offsetWidth)) + 'px';
+          el.style.top = Math.max(0, Math.min(e.clientY - offsetY, window.innerHeight - el.offsetHeight - 60)) + 'px';
+        }
+      });
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+        el.style.cursor = 'default';
+      });
+    }
+
+    function openApp(url){
+      playClickSound();
+      const appWindow=document.createElement('div');
+      appWindow.classList.add('window');
+      appWindow.style.width='500px';
+      appWindow.style.height='400px';
+      appWindow.style.top='50px';
+      appWindow.style.left='50px';
+      appWindow.style.position='absolute';
+      appWindow.innerHTML=`
+        <div class="window-header">
+          <button class="close-btn" onclick="this.parentElement.parentElement.remove(); playClickSound();">×</button>
+        </div>
+        <iframe src="${url}" style="width:100%; height:calc(100% - 35px); border:none; border-radius:0 0 20px 20px;"></iframe>
+      `;
+      document.body.appendChild(appWindow);
+      makeDraggable(appWindow);
+
+      appWindow.style.transform='scale(0.9) translateY(-20px)';
+      appWindow.style.opacity='0';
+      setTimeout(()=>{
+        appWindow.style.transition='all 0.3s ease';
+        appWindow.style.transform='scale(1) translateY(0)';
+        appWindow.style.opacity='1';
+      },10);
+    }
+
+    // ENABLE AMBIENCE AFTER USER INTERACTION
+    document.addEventListener('click', () => {
+      const ambience = document.getElementById('ambience');
+      if (ambience.muted) {
+        ambience.muted = false;
+        ambience.play();
+      }
+    }, { once: true });
+
+    // CLICK SOUND FUNCTION
+    const clickSound = new Audio('click.mp3');
+    function playClickSound() {
+      clickSound.currentTime = 0; 
+      clickSound.play();
+    }
+
+    // ADD CLICK SOUND TO ALL BUTTONS
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', playClickSound);
+    });
+  </script>
 </body>
 </html>
