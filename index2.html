@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nefarious OS Interface</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link rel="icon" href="favicon.png" type="image/png">
+<style>
+body {
+  margin:0;
+  height:100vh;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(270deg, #ff7eb3, #65d6ce, #f6d365, #a18cd1);
+  background-size:800% 800%;
+  animation: gradientMove 15s ease infinite;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+@keyframes gradientMove {
+  0% {background-position:0% 50%;}
+  50% {background-position:100% 50%;}
+  100% {background-position:0% 50%;}
+}
+.window {
+  flex:1;
+  margin:20px;
+  border-radius:20px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+}
+.window h1 {
+  margin-bottom:20px;
+  color:#fff;
+}
+.taskbar {
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:60px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(20px);
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+  justify-content:space-between;
+}
+.taskbar-left, .taskbar-right {
+  display:flex;
+  align-items:center;
+}
+.taskbar button {
+  margin-right:15px;
+  padding:8px 15px;
+  border:none;
+  border-radius:12px;
+  background: linear-gradient(135deg, #65d6ce, #ff7eb3);
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position:relative;
+}
+.taskbar button:hover {
+  transform: translateY(-10px) scale(1.1);
+  box-shadow:0 10px 20px rgba(0,0,0,0.4);
+  z-index:10;
+}
+#startMenu {
+  position:fixed;
+  bottom:60px;
+  left:10px;
+  width:250px;
+  background: rgba(255,255,255,0.9);
+  border:2px solid #ff7eb3;
+  border-radius:12px;
+  display:none;
+  flex-direction:column;
+  padding:10px;
+  backdrop-filter: blur(10px);
+  box-shadow:0 5px 20px rgba(0,0,0,0.5);
+}
+#startMenu .profile {
+  display:flex;
+  align-items:center;
+  padding:10px;
+  margin-bottom:10px;
+  border-bottom:1px solid #ff7eb3;
+}
+#startMenu .profile img {
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  margin-right:10px;
+}
+#startMenu .profile span {
+  font-weight:bold;
+  color:#000;
+}
+#startMenu button {
+  margin:5px 0;
+  padding:8px 15px;
+  border:none;
+  border-radius:8px;
+  background: linear-gradient(135deg, #65d6ce, #ff7eb3);
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+  text-align:left;
+  transition: background 0.2s, transform 0.2s;
+}
+#startMenu button:hover { background: linear-gradient(135deg, #ff7eb3, #65d6ce); transform:translateX(3px); }
+#clock {
+  font-weight:bold;
+  color:#fff;
+}
+.widget {
+  position:absolute;
+  width:120px;
+  height:120px;
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(10px);
+  border-radius:20px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+  user-select:none;
+}
+</style>
+</head>
+<body>
+<div class="window" id="mainWindow">
+  <h1>Welcome to Nefarious OS</h1>
+  <p>Select an app from the taskbar or Start menu</p>
+  <div class="widget" id="widget1" style="top:50px; left:50px;">Widget 1</div>
+  <div class="widget" id="widget2" style="top:50px; left:200px;">Widget 2</div>
+  <div class="widget" id="widget3" style="top:50px; left:350px;">Widget 3</div>
+</div>
+<div id="startMenu">
+  <div class="profile">
+    <img src="https://i.pravatar.cc/40" alt="Profile">
+    <span>Username</span>
+  </div>
+  <button onclick="addToTaskbar('Downloads','/downloads')"><i class="fas fa-download"></i> Downloads</button>
+  <button onclick="addToTaskbar('Media Player','/Media')"><i class="fas fa-music"></i> Media Player</button>
+  <button onclick="addToTaskbar('Three','/three')"><i class="fas fa-folder"></i> Three</button>
+  <button onclick="addToTaskbar('Four','/four')"><i class="fas fa-cogs"></i> Four</button>
+</div>
+<div class="taskbar">
+  <div class="taskbar-left" id="taskbarApps">
+    <button id="startBtn"><i class="fas fa-windows"></i> Start</button>
+  </div>
+  <div class="taskbar-right">
+    <span id="clock"></span>
+  </div>
+</div>
+<script>
+const startBtn = document.getElementById('startBtn');
+const startMenu = document.getElementById('startMenu');
+const taskbarApps = document.getElementById('taskbarApps');
+
+startBtn.addEventListener('click', ()=>{
+  startMenu.style.display = startMenu.style.display==='flex'?'none':'flex';
+});
+
+const defaultApps = [
+  {name:'Downloads',icon:'<i class="fas fa-download"></i>',url:'/downloads'},
+  {name:'Media Player',icon:'<i class="fas fa-music"></i>',url:'/Media'},
+  {name:'Three',icon:'<i class="fas fa-folder"></i>',url:'/three'},
+  {name:'Four',icon:'<i class="fas fa-cogs"></i>',url:'/four'}
+];
+
+defaultApps.forEach(app=>{
+  const btn = document.createElement('button');
+  btn.innerHTML = `${app.icon} ${app.name}`;
+  btn.onclick = ()=>{ location.href=app.url; };
+  taskbarApps.appendChild(btn);
+});
+
+function addToTaskbar(name,url){
+  for(let btn of taskbarApps.children){
+    if(btn.textContent.trim()===name) return;
+  }
+  const btn = document.createElement('button');
+  btn.innerHTML = `<i class='fas fa-circle'></i> ${name}`;
+  btn.onclick = ()=>{ location.href=url; };
+  taskbarApps.appendChild(btn);
+  startMenu.style.display='none';
+}
+
+function updateClock(){
+  const now = new Date();
+  let hours = now.getHours();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12 || 12;
+  const minutes = now.getMinutes().toString().padStart(2,'0');
+  const seconds = now.getSeconds().toString().padStart(2,'0');
+  document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
+}
+setInterval(updateClock,1000);
+updateClock();
+
+// Background movement
+document.addEventListener('mousemove', e => {
+  const xPercent = e.clientX / window.innerWidth - 0.5;
+  const yPercent = e.clientY / window.innerHeight - 0.5;
+  const moveX = xPercent * 40;
+  const moveY = yPercent * 40;
+  document.body.style.backgroundPosition = `${50 + moveX}% ${50 + moveY}%`;
+});
+
+// Drag and click for widgets with boundary limits
+const widgets = document.querySelectorAll('.widget');
+widgets.forEach(widget => {
+  let offsetX, offsetY, isDragging=false;
+  const parentRect = document.body.getBoundingClientRect();
+
+  widget.addEventListener('mousedown', e => {
+    isDragging = true;
+    offsetX = e.clientX - widget.offsetLeft;
+    offsetY = e.clientY - widget.offsetTop;
+  });
+
+  document.addEventListener('mousemove', e => {
+    if(isDragging){
+      let newLeft = e.clientX - offsetX;
+      let newTop = e.clientY - offsetY;
+      // constrain within window
+      newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - widget.offsetWidth));
+      newTop = Math.max(0, Math.min(newTop, window.innerHeight - widget.offsetHeight - 60)); // 60px for taskbar
+      widget.style.left = `${newLeft}px`;
+      widget.style.top = `${newTop}px`;
+    }
+  });
+
+  document.addEventListener('mouseup', () => { isDragging=false; });
+
+  widget.addEventListener('click', () => {
+    alert(widget.textContent + ' clicked');
+  });
+});
+</script>
+</body>
+</html>
