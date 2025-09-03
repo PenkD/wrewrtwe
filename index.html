@@ -240,6 +240,18 @@ body.dark .close-btn { color:#fff; background: rgba(255,255,255,0.1); }
 </style>
 </head>
 <body>
+  <!-- Ambience Audio -->
+  <audio id="ambience" src="ambience.mp3" loop autoplay muted></audio>
+
+  <div class="window" id="mainWindow">
+    <h1>Welcome,</h1>
+    <p>Select an app from the taskbar or Start menu</p>
+    <div class="widget" id="widget1" style="top:50px; left:50px;">Widget 1</div>
+    <div class="widget" id="widget2" style="top:50px; left:200px;">Widget 2</div>
+    <div class="widget" id="widget3" style="top:50px; left:350px;">Widget 3</div>
+  </div>
+  <!-- rest of your code -->
+
 <div class="window" id="mainWindow">
   <h1>Welcome,</h1>
   <p>Select an app from the taskbar or Start menu</p>
@@ -400,6 +412,16 @@ function openApp(url){
     appWindow.style.opacity='1';
   },10);
 }
+
+  // Enable audio playback on first user interaction
+document.addEventListener('click', () => {
+  const ambience = document.getElementById('ambience');
+  if (ambience.muted) {
+    ambience.muted = false;
+    ambience.play();
+  }
+}, { once: true });
+
 </script>
 </body>
 </html>
