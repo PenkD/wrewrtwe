@@ -26,7 +26,7 @@ body {
   100% {background-position:0% 50%;}
 }
 
-/* APPLE GLASS MAIN PANEL */
+/* APPLE GLASS WINDOWS */
 .window {
   flex: 1;
   margin: 20px;
@@ -44,8 +44,6 @@ body {
   overflow:hidden;
   transition: all 0.3s ease;
 }
-
-/* MOVING SHINE */
 .window::before {
   content: "";
   position: absolute;
@@ -61,10 +59,6 @@ body {
 @keyframes shine {
   0% { transform: rotate(25deg) translateX(-100%); }
   100% { transform: rotate(25deg) translateX(100%); }
-}
-.window h1 {
-  margin-bottom:20px;
-  color:#fff;
 }
 
 /* TASKBAR */
@@ -118,15 +112,14 @@ body {
   padding:10px;
   backdrop-filter: blur(10px);
   box-shadow:0 5px 20px rgba(0,0,0,0.5);
-  transition: background 0.5s, border 0.5s, transform 0.3s ease;
+  transition: background 0.5s, border 0.5s, transform 0.3s ease, opacity 0.3s ease;
   transform-origin: bottom left;
+  opacity:0;
 }
 #startMenu.show {
-  animation: startMenuOpen 0.3s ease forwards;
-}
-@keyframes startMenuOpen {
-  0% { transform: scale(0.9) translateY(20px); opacity:0; }
-  100% { transform: scale(1) translateY(0); opacity:1; }
+  display:flex;
+  opacity:1;
+  transform: scale(1) translateY(0);
 }
 #startMenu .profile {
   display:flex;
@@ -173,13 +166,14 @@ body {
   color:#fff;
 }
 
-/* WIDGETS */
+/* WIDGETS - APPLE GLASS FROST EFFECT */
 .widget {
   position:absolute;
   width:120px;
   height:120px;
-  background: rgba(255,255,255,0.25);
-  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
   border-radius:20px;
   display:flex;
   justify-content:center;
@@ -188,7 +182,11 @@ body {
   font-weight:bold;
   cursor:pointer;
   user-select:none;
-  transition: background 0.3s;
+  transition: background 0.3s, transform 0.2s;
+}
+.widget:hover {
+  background: rgba(255,255,255,0.25);
+  transform: scale(1.05);
 }
 
 /* DRAGGABLE APP WINDOWS */
@@ -226,6 +224,9 @@ body.dark .window {
   border: 1px solid rgba(255,255,255,0.1);
   box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 0 50px rgba(255,255,255,0.05);
 }
+body.dark .widget {
+  background: rgba(255,255,255,0.15);
+}
 body.dark #startMenu {
   background: rgba(0,0,0,0.9);
   border:2px solid #65d6ce;
@@ -234,12 +235,6 @@ body.dark #startMenu .profile span,
 body.dark #startMenu .profile button,
 body.dark #startMenu button {
   color:#fff;
-}
-body.dark .taskbar {
-  background: rgba(0,0,0,0.3);
-}
-body.dark .widget {
-  background: rgba(255,255,255,0.15);
 }
 body.dark .close-btn { color:#fff; background: rgba(255,255,255,0.1); }
 </style>
@@ -275,14 +270,18 @@ body.dark .close-btn { color:#fff; background: rgba(255,255,255,0.1); }
 </div>
 
 <script>
-// START MENU TOGGLE WITH ANIMATION
+// START MENU TOGGLE FIX
 const startBtn = document.getElementById('startBtn');
 const startMenu = document.getElementById('startMenu');
 startBtn.addEventListener('click', ()=>{
-  startMenu.style.display = 'flex';
-  startMenu.classList.remove('show');
-  void startMenu.offsetWidth; // trigger reflow
-  startMenu.classList.add('show');
+  if(startMenu.classList.contains('show')){
+    startMenu.classList.remove('show');
+    setTimeout(()=> startMenu.style.display='none', 300);
+  } else {
+    startMenu.style.display='flex';
+    void startMenu.offsetWidth; // trigger reflow
+    startMenu.classList.add('show');
+  }
 });
 
 // CLOCK
@@ -384,7 +383,6 @@ function openApp(url){
   appWindow.style.top='50px';
   appWindow.style.left='50px';
   appWindow.style.position='absolute';
-
   appWindow.innerHTML=`
     <div class="window-header">
       <button class="close-btn" onclick="this.parentElement.parentElement.remove()">×</button>
@@ -394,7 +392,6 @@ function openApp(url){
   document.body.appendChild(appWindow);
   makeDraggable(appWindow);
 
-  // Animate in
   appWindow.style.transform='scale(0.9) translateY(-20px)';
   appWindow.style.opacity='0';
   setTimeout(()=>{
@@ -402,21 +399,6 @@ function openApp(url){
     appWindow.style.transform='scale(1) translateY(0)';
     appWindow.style.opacity='1';
   },10);
-
-  // Theme-based close button color
-  const closeBtn = appWindow.querySelector('.close-btn');
-  const setBtnColor = () => {
-    if(document.body.classList.contains('dark')){
-      closeBtn.style.color = '#fff';
-      closeBtn.style.background = 'rgba(255,255,255,0.1)';
-    } else {
-      closeBtn.style.color = '#000';
-      closeBtn.style.background = 'rgba(255,255,255,0.3)';
-    }
-  };
-  setBtnColor();
-  const observer = new MutationObserver(setBtnColor);
-  observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
 }
 </script>
 </body>
