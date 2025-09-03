@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <link rel="icon" href="favicon.png" type="image/png">
 <style>
-/* GENERAL STYLES */
+/* === GENERAL STYLES === */
 body {
   margin:0;
   height:100vh;
@@ -26,7 +26,7 @@ body {
   100% {background-position:0% 50%;}
 }
 
-/* APPLE GLASS WINDOWS */
+/* === APPLE GLASS WINDOWS === */
 .window {
   flex: 1;
   margin: 20px;
@@ -61,7 +61,7 @@ body {
   100% { transform: rotate(25deg) translateX(100%); }
 }
 
-/* TASKBAR */
+/* === TASKBAR === */
 .taskbar {
   position:fixed;
   bottom:0;
@@ -98,7 +98,7 @@ body {
   z-index:10;
 }
 
-/* START MENU */
+/* === START MENU === */
 #startMenu {
   position:fixed;
   bottom:60px;
@@ -166,7 +166,7 @@ body {
   color:#fff;
 }
 
-/* WIDGETS - APPLE GLASS FROST EFFECT */
+/* === WIDGETS === */
 .widget {
   position:absolute;
   width:120px;
@@ -189,7 +189,7 @@ body {
   transform: scale(1.05);
 }
 
-/* DRAGGABLE APP WINDOWS */
+/* === DRAGGABLE APP WINDOWS === */
 .window-header {
   width:100%;
   height:35px;
@@ -214,7 +214,7 @@ body {
   background: rgba(255,255,255,0.2);
 }
 
-/* DARK THEME */
+/* === DARK THEME === */
 body.dark {
   background: linear-gradient(270deg, #1a1a1a, #222, #333, #111);
   color: #fff;
@@ -243,52 +243,54 @@ body.dark .close-btn { color:#fff; background: rgba(255,255,255,0.1); }
   <!-- Ambience Audio -->
   <audio id="ambience" src="ambience.mp3" loop autoplay muted></audio>
 
-<div class="window" id="mainWindow">
-  <h1>Welcome,</h1>
-  <p>Select an app from the taskbar or Start menu</p>
-  <div class="widget" id="widget1" style="top:50px; left:50px;">Widget 1</div>
-  <div class="widget" id="widget2" style="top:50px; left:200px;">Widget 2</div>
-  <div class="widget" id="widget3" style="top:50px; left:350px;">Widget 3</div>
-</div>
+  <!-- Main Window -->
+  <div class="window" id="mainWindow">
+    <h1>Welcome,</h1>
+    <p>Select an app from the taskbar or Start menu</p>
+    <div class="widget" id="widget1" style="top:50px; left:50px;">Widget 1</div>
+    <div class="widget" id="widget2" style="top:50px; left:200px;">Widget 2</div>
+    <div class="widget" id="widget3" style="top:50px; left:350px;">Widget 3</div>
+  </div>
 
-<div id="startMenu">
-  <div class="profile">
-    <img src="Avatar.png" alt="Profile">
-    <span>Guest32k</span>
-    <button id="darkToggle"><i class="fas fa-moon"></i></button>
+  <!-- Start Menu -->
+  <div id="startMenu">
+    <div class="profile">
+      <img src="Avatar.png" alt="Profile">
+      <span>Guest32k</span>
+      <button id="darkToggle"><i class="fas fa-moon"></i></button>
+    </div>
+    <button onclick="openApp('https://nefarious.site/downloads')"><i class="fas fa-download"></i> Downloads</button>
+    <button onclick="alert('Media Player opened')"><i class="fas fa-music"></i> Media Player</button>
+    <button onclick="alert('Three opened')"><i class="fas fa-folder"></i> Three</button>
+    <button onclick="alert('Four opened')"><i class="fas fa-cogs"></i> Four</button>
   </div>
-  <button onclick="openApp('https://nefarious.site/downloads')"><i class="fas fa-download"></i> Downloads</button>
-  <button onclick="alert('Media Player opened')"><i class="fas fa-music"></i> Media Player</button>
-  <button onclick="alert('Three opened')"><i class="fas fa-folder"></i> Three</button>
-  <button onclick="alert('Four opened')"><i class="fas fa-cogs"></i> Four</button>
-</div>
 
-<div class="taskbar">
-  <div class="taskbar-left" id="taskbarApps">
-    <button id="startBtn"><i class="fas fa-windows"></i> Start</button>
+  <!-- Taskbar -->
+  <div class="taskbar">
+    <div class="taskbar-left" id="taskbarApps">
+      <button id="startBtn"><i class="fas fa-windows"></i> Start</button>
+    </div>
+    <div class="taskbar-right">
+      <span id="clock"></span>
+    </div>
   </div>
-  <div class="taskbar-right">
-    <span id="clock"></span>
-  </div>
-</div>
 
 <script>
-// === EXISTING JS (unchanged) ===
-// Start menu toggle
+// === START MENU TOGGLE ===
 const startBtn = document.getElementById('startBtn');
 const startMenu = document.getElementById('startMenu');
-startBtn.addEventListener('click', ()=>{
+startBtn.addEventListener('click', ()=> {
   if(startMenu.classList.contains('show')){
     startMenu.classList.remove('show');
     setTimeout(()=> startMenu.style.display='none', 300);
   } else {
     startMenu.style.display='flex';
-    void startMenu.offsetWidth;
+    void startMenu.offsetWidth; // reflow
     startMenu.classList.add('show');
   }
 });
 
-// Clock
+// === CLOCK ===
 function updateClock(){
   const now = new Date();
   let hours = now.getHours();
@@ -301,7 +303,7 @@ function updateClock(){
 setInterval(updateClock,1000);
 updateClock();
 
-// Background movement
+// === BACKGROUND MOVEMENT ===
 document.addEventListener('mousemove', e => {
   const xPercent = e.clientX / window.innerWidth - 0.5;
   const yPercent = e.clientY / window.innerHeight - 0.5;
@@ -310,7 +312,7 @@ document.addEventListener('mousemove', e => {
   document.body.style.backgroundPosition = `${50 + moveX}% ${50 + moveY}%`;
 });
 
-// Widget dragging + click
+// === WIDGET DRAG & CLICK ===
 const widgets = document.querySelectorAll('.widget');
 widgets.forEach(widget => {
   let offsetX, offsetY, isDragging=false;
@@ -336,7 +338,7 @@ widgets.forEach(widget => {
   });
 });
 
-// Theme toggle
+// === THEME TOGGLE ===
 document.addEventListener("DOMContentLoaded", () => {
   const darkToggle = document.getElementById('darkToggle');
   const body = document.body;
@@ -358,25 +360,31 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Open app windows
+// === OPEN APP WINDOWS WITH DRAGGABLE HEADER ===
 function makeDraggable(el){
-  const header = el.querySelector('.window-header');
+  const header = el.querySelector('.window-header') || el;
+  const iframe = el.querySelector('iframe');
   let offsetX, offsetY, isDragging=false;
+
   header.addEventListener('mousedown', e => {
     isDragging = true;
     offsetX = e.clientX - el.offsetLeft;
     offsetY = e.clientY - el.offsetTop;
     el.style.cursor = 'grabbing';
+    if (iframe) iframe.style.pointerEvents = 'none';
   });
+
   document.addEventListener('mousemove', e => {
     if(isDragging){
       el.style.left = Math.max(0, Math.min(e.clientX - offsetX, window.innerWidth - el.offsetWidth)) + 'px';
       el.style.top = Math.max(0, Math.min(e.clientY - offsetY, window.innerHeight - el.offsetHeight - 60)) + 'px';
     }
   });
+
   document.addEventListener('mouseup', () => {
     isDragging = false;
     el.style.cursor = 'default';
+    if (iframe) iframe.style.pointerEvents = 'auto';
   });
 }
 
@@ -406,24 +414,22 @@ function openApp(url){
   },10);
 }
 
-// === NEW SOUND FEATURES ===
-// Unmute ambience after first click
+// === AMBIENCE AND CLICK SOUNDS ===
+const ambience = document.getElementById('ambience');
 document.addEventListener('click', () => {
-  const ambience = document.getElementById('ambience');
-  if (ambience.muted) {
+  if(ambience.muted){
     ambience.muted = false;
     ambience.play();
   }
 }, { once: true });
 
-// Click sound setup
 const clickSound = new Audio('click.mp3');
 function playClickSound() {
   clickSound.currentTime = 0;
   clickSound.play();
 }
 
-// Add click sound to all buttons
+// Add click sound to all buttons globally
 document.querySelectorAll('button').forEach(btn => {
   btn.addEventListener('click', playClickSound);
 });
