@@ -166,7 +166,7 @@ body {
   color:#fff;
 }
 
-/* WIDGETS - APPLE GLASS FROST EFFECT */
+/* WIDGETS */
 .widget {
   position:absolute;
   width:120px;
@@ -187,6 +187,22 @@ body {
 .widget:hover {
   background: rgba(255,255,255,0.25);
   transform: scale(1.05);
+}
+
+/* WIDGET DRAG HEADER STYLE */
+.widget-header {
+  width:100%;
+  height:30px;
+  cursor:grab;
+  position:absolute;
+  top:0;
+  left:0;
+  border-bottom:1px solid rgba(255,255,255,0.2);
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  padding:0 5px;
+  box-sizing:border-box;
 }
 
 /* DRAGGABLE APP WINDOWS */
@@ -240,15 +256,25 @@ body.dark .close-btn { color:#fff; background: rgba(255,255,255,0.1); }
 </style>
 </head>
 <body>
-  <!-- Ambience Audio -->
-  <audio id="ambience" src="ambience.mp3" loop autoplay muted></audio>
+
+<audio id="ambience" src="ambience.mp3" loop autoplay muted></audio>
 
 <div class="window" id="mainWindow">
   <h1>Welcome,</h1>
   <p>Select an app from the taskbar or Start menu</p>
-  <div class="widget" id="widget1" style="top:50px; left:50px;">Widget 1</div>
-  <div class="widget" id="widget2" style="top:50px; left:200px;">Widget 2</div>
-  <div class="widget" id="widget3" style="top:50px; left:350px;">Widget 3</div>
+  
+  <div class="widget" id="widget1" style="top:50px; left:50px;">
+    <div class="widget-header"></div>
+    Widget 1
+  </div>
+  <div class="widget" id="widget2" style="top:50px; left:200px;">
+    <div class="widget-header"></div>
+    Widget 2
+  </div>
+  <div class="widget" id="widget3" style="top:50px; left:350px;">
+    <div class="widget-header"></div>
+    Widget 3
+  </div>
 </div>
 
 <div id="startMenu">
@@ -316,48 +342,40 @@ function playClickSound(){
   clickSound.play();
 }
 
-// WIDGET DRAGGING WITH requestAnimationFrame
+// WIDGET DRAGGING BASED ON HEADER (like mydivheader)
 const widgets = document.querySelectorAll('.widget');
 widgets.forEach(widget => {
-  let offsetX, offsetY;
-  let isDragging = false;
-  let lastX, lastY;
-
-  widget.addEventListener('mousedown', e => {
-    isDragging = true;
-    offsetX = e.clientX - widget.offsetLeft;
-    offsetY = e.clientY - widget.offsetTop;
-    lastX = widget.offsetLeft;
-    lastY = widget.offsetTop;
-    widget.style.transition = 'none';
-  });
-
-  document.addEventListener('mouseup', () => {
-    isDragging = false;
-    widget.style.transition = 'background 0.3s, transform 0.2s';
-  });
-
-  document.addEventListener('mousemove', e => {
-    if (isDragging) {
-      lastX = Math.max(0, Math.min(e.clientX - offsetX, window.innerWidth - widget.offsetWidth));
-      lastY = Math.max(0, Math.min(e.clientY - offsetY, window.innerHeight - widget.offsetHeight - 60));
-    }
-  });
-
-  function dragUpdate(){
-    if(isDragging){
-      widget.style.left = `${lastX}px`;
-      widget.style.top = `${lastY}px`;
-      requestAnimationFrame(dragUpdate);
-    }
-  }
-  dragUpdate();
-
-  widget.addEventListener('click', () => {
-    playClickSound();
-    alert(widget.textContent + ' clicked');
-  });
+  dragElement(widget, widget.querySelector('.widget-header'));
+  widget.addEventListener('click', () => playClickSound());
 });
+
+function dragElement(elmnt, handle) {
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  handle.onmousedown = dragMouseDown;
+
+  function dragMouseDown(e) {
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
 
 // THEME TOGGLE
 const darkToggle = document.getElementById('darkToggle');
