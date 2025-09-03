@@ -42,6 +42,7 @@ body {
   justify-content:center;
   align-items:center;
   overflow:hidden;
+  transition: all 0.3s ease;
 }
 
 /* MOVING SHINE */
@@ -117,7 +118,15 @@ body {
   padding:10px;
   backdrop-filter: blur(10px);
   box-shadow:0 5px 20px rgba(0,0,0,0.5);
-  transition: background 0.5s, border 0.5s;
+  transition: background 0.5s, border 0.5s, transform 0.3s ease;
+  transform-origin: bottom left;
+}
+#startMenu.show {
+  animation: startMenuOpen 0.3s ease forwards;
+}
+@keyframes startMenuOpen {
+  0% { transform: scale(0.9) translateY(20px); opacity:0; }
+  100% { transform: scale(1) translateY(0); opacity:1; }
 }
 #startMenu .profile {
   display:flex;
@@ -182,6 +191,31 @@ body {
   transition: background 0.3s;
 }
 
+/* DRAGGABLE APP WINDOWS */
+.window-header {
+  width:100%;
+  height:35px;
+  cursor:grab;
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  padding:0 10px;
+  box-sizing:border-box;
+}
+.close-btn {
+  font-size:24px;
+  width:35px;
+  height:35px;
+  line-height:35px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  transition: background 0.3s, color 0.3s;
+}
+.close-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
 /* DARK THEME */
 body.dark {
   background: linear-gradient(270deg, #1a1a1a, #222, #333, #111);
@@ -207,7 +241,7 @@ body.dark .taskbar {
 body.dark .widget {
   background: rgba(255,255,255,0.15);
 }
-
+body.dark .close-btn { color:#fff; background: rgba(255,255,255,0.1); }
 </style>
 </head>
 <body>
@@ -225,10 +259,10 @@ body.dark .widget {
     <span>Guest32k</span>
     <button id="darkToggle"><i class="fas fa-moon"></i></button>
   </div>
-  <button onclick="addToTaskbar('Downloads','/downloads')"><i class="fas fa-download"></i> Downloads</button>
-  <button onclick="addToTaskbar('Media Player','/Media')"><i class="fas fa-music"></i> Media Player</button>
-  <button onclick="addToTaskbar('Three','/three')"><i class="fas fa-folder"></i> Three</button>
-  <button onclick="addToTaskbar('Four','/four')"><i class="fas fa-cogs"></i> Four</button>
+  <button onclick="openApp('https://nefarious.site/downloads')"><i class="fas fa-download"></i> Downloads</button>
+  <button onclick="alert('Media Player opened')"><i class="fas fa-music"></i> Media Player</button>
+  <button onclick="alert('Three opened')"><i class="fas fa-folder"></i> Three</button>
+  <button onclick="alert('Four opened')"><i class="fas fa-cogs"></i> Four</button>
 </div>
 
 <div class="taskbar">
@@ -241,41 +275,15 @@ body.dark .widget {
 </div>
 
 <script>
-// START MENU TOGGLE
+// START MENU TOGGLE WITH ANIMATION
 const startBtn = document.getElementById('startBtn');
 const startMenu = document.getElementById('startMenu');
-const taskbarApps = document.getElementById('taskbarApps');
-
 startBtn.addEventListener('click', ()=>{
-  startMenu.style.display = startMenu.style.display==='flex'?'none':'flex';
+  startMenu.style.display = 'flex';
+  startMenu.classList.remove('show');
+  void startMenu.offsetWidth; // trigger reflow
+  startMenu.classList.add('show');
 });
-
-// DEFAULT APPS
-const defaultApps = [
-  {name:'Downloads',icon:'<i class="fas fa-download"></i>',url:'/downloads'},
-  {name:'Media Player',icon:'<i class="fas fa-music"></i>',url:'/Media'},
-  {name:'Three',icon:'<i class="fas fa-folder"></i>',url:'/three'},
-  {name:'Four',icon:'<i class="fas fa-cogs"></i>',url:'/four'}
-];
-
-defaultApps.forEach(app=>{
-  const btn = document.createElement('button');
-  btn.innerHTML = `${app.icon} ${app.name}`;
-  btn.onclick = ()=>{ location.href=app.url; };
-  taskbarApps.appendChild(btn);
-});
-
-// ADD TO TASKBAR
-function addToTaskbar(name,url){
-  for(let btn of taskbarApps.children){
-    if(btn.textContent.trim()===name) return;
-  }
-  const btn = document.createElement('button');
-  btn.innerHTML = `<i class='fas fa-circle'></i> ${name}`;
-  btn.onclick = ()=>{ location.href=url; };
-  taskbarApps.appendChild(btn);
-  startMenu.style.display='none';
-}
 
 // CLOCK
 function updateClock(){
@@ -327,9 +335,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const darkToggle = document.getElementById('darkToggle');
   const body = document.body;
 
-  if (localStorage.getItem('theme') === 'dark') {
-    body.classList.add('dark');
-  }
+  if (localStorage.getItem('theme') === 'dark') body.classList.add('dark');
 
   function updateIcon() {
     if (!darkToggle) return;
@@ -337,7 +343,6 @@ document.addEventListener("DOMContentLoaded", () => {
       ? '<i class="fas fa-sun"></i>' 
       : '<i class="fas fa-moon"></i>';
   }
-
   updateIcon();
 
   if (darkToggle) {
@@ -348,6 +353,71 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+// OPEN APP WINDOW WITH DRAG & CLOSE BUTTON
+function makeDraggable(el){
+  const header = el.querySelector('.window-header');
+  let offsetX, offsetY, isDragging=false;
+  header.addEventListener('mousedown', e => {
+    isDragging = true;
+    offsetX = e.clientX - el.offsetLeft;
+    offsetY = e.clientY - el.offsetTop;
+    el.style.cursor = 'grabbing';
+  });
+  document.addEventListener('mousemove', e => {
+    if(isDragging){
+      el.style.left = Math.max(0, Math.min(e.clientX - offsetX, window.innerWidth - el.offsetWidth)) + 'px';
+      el.style.top = Math.max(0, Math.min(e.clientY - offsetY, window.innerHeight - el.offsetHeight - 60)) + 'px';
+    }
+  });
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    el.style.cursor = 'default';
+  });
+}
+
+function openApp(url){
+  const appWindow=document.createElement('div');
+  appWindow.classList.add('window');
+  appWindow.style.width='500px';
+  appWindow.style.height='400px';
+  appWindow.style.top='50px';
+  appWindow.style.left='50px';
+  appWindow.style.position='absolute';
+
+  appWindow.innerHTML=`
+    <div class="window-header">
+      <button class="close-btn" onclick="this.parentElement.parentElement.remove()">×</button>
+    </div>
+    <iframe src="${url}" style="width:100%; height:calc(100% - 35px); border:none; border-radius:0 0 20px 20px;"></iframe>
+  `;
+  document.body.appendChild(appWindow);
+  makeDraggable(appWindow);
+
+  // Animate in
+  appWindow.style.transform='scale(0.9) translateY(-20px)';
+  appWindow.style.opacity='0';
+  setTimeout(()=>{
+    appWindow.style.transition='all 0.3s ease';
+    appWindow.style.transform='scale(1) translateY(0)';
+    appWindow.style.opacity='1';
+  },10);
+
+  // Theme-based close button color
+  const closeBtn = appWindow.querySelector('.close-btn');
+  const setBtnColor = () => {
+    if(document.body.classList.contains('dark')){
+      closeBtn.style.color = '#fff';
+      closeBtn.style.background = 'rgba(255,255,255,0.1)';
+    } else {
+      closeBtn.style.color = '#000';
+      closeBtn.style.background = 'rgba(255,255,255,0.3)';
+    }
+  };
+  setBtnColor();
+  const observer = new MutationObserver(setBtnColor);
+  observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+}
 </script>
 </body>
 </html>
