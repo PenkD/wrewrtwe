@@ -1,204 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Downloads</title>
+<title>Downloads - Nefarious Hub</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <link rel="icon" href="favicon.png" type="image/png">
 <style>
+:root {
+  --primary: #ff7eb3;
+  --secondary: #65d6ce;
+  --accent: #f6d365;
+  --bg-light: #f0f8ff;
+  --bg-dark: #1a1a2e;
+  --text-light: #111;
+  --text-dark: #fff;
+  --card-radius: 25px;
+  --button-radius: 20px;
+}
+
+/* BODY & THEME */
 body {
-  margin: 0;
-  height: 100vh;
+  margin:0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  overflow: hidden;
-  perspective: 1000px;
-  transition: color 0.5s;
-  background-size: 800% 800%;
+  transition: background 0.5s, color 0.5s;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+  background-size: 400% 400%;
   animation: gradientMove 15s ease infinite;
-  background-image: linear-gradient(270deg, #ff7eb3, #65d6ce, #f6d365, #a18cd1);
+  color: var(--text-light);
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
+  overflow: hidden;
 }
-body.dark { background-image: linear-gradient(270deg, #0f0c29, #302b63, #24243e, #4b0c7c, #1c1b2a, #3d1e6d); }
+body.dark {
+  background: linear-gradient(135deg, #1e1e2f, #282830, #111, #222233);
+  color: var(--text-dark);
+}
 
 @keyframes gradientMove {
-  0% {background-position: 0% 50%;}
-  50% {background-position: 100% 50%;}
-  100% {background-position: 0% 50%;}
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
 
+/* MAIN CARD */
 .card {
   width: 80vw;
   height: 80vh;
-  background: rgba(255,255,255,0.85);
-  border-radius: 20px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: var(--card-radius);
   box-shadow: 0 20px 40px rgba(0,0,0,0.2);
   overflow-y: auto;
-  padding: 15px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
+  transition: transform 0.3s ease;
 }
-body.dark .card { background: rgba(30,30,30,0.85); color: #eee; }
+body.dark .card {
+  background: rgba(0,0,0,0.3);
+  color: #fff;
+}
 
-.card h1 { margin: 10px 0; font-size: 2rem; }
-.card p { font-size: 1rem; margin: 0 0 15px; }
+.card h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
+/* SEARCH BAR */
+.search-input {
+  width: 60%;
+  padding: 12px;
+  border-radius: var(--button-radius);
+  border: none;
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+
+/* DOWNLOAD BUTTONS */
 .downloads {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 20px;
   justify-content: center;
 }
-
 .download-btn {
   width: 160px;
   height: 160px;
-  background: rgba(255,255,255,0.9);
-  border-radius: 16px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   padding: 10px;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.download-btn:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-.download-btn img { width: 100%; height: 110px; object-fit: cover; border-radius: 12px; }
-.download-btn span {
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+  color: #fff;
   font-weight: bold;
-  margin-top: 5px;
-  color: #111;
-  background: rgba(255,255,255,0.8);
-  padding: 2px 6px;
-  border-radius: 8px;
 }
-
-.search-input {
-  width: 50%;
-  padding: 10px;
+.download-btn:hover {
+  transform: translateY(-8px) scale(1.05) rotateZ(1deg);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+  background: rgba(255,255,255,0.35);
+}
+.download-btn img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
   border-radius: 12px;
-  border: none;
-  margin-bottom: 15px;
-  font-size: 1rem;
+}
+.download-btn span {
+  background: rgba(255,255,255,0.25);
+  padding: 4px 8px;
+  border-radius: 12px;
+  text-align: center;
 }
 
-.dark-toggle {
+/* DARK MODE TOGGLE */
+#darkToggle {
   position: fixed;
   bottom: 20px;
   left: 20px;
-  background: rgba(255,255,255,0.8);
   border: none;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #fff;
+  font-size: 1.3rem;
+  padding: 10px 12px;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 1rem;
   cursor: pointer;
   box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  z-index: 100;
 }
-body.dark .dark-toggle { background: rgba(50,50,50,0.8); color: #fff; }
+#darkToggle:hover { transform: scale(1.1); }
 
-.about-btn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 10px 20px;
-  background: linear-gradient(135deg, #65d6ce, #ff7eb3);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.about-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
-.about-btn:active { transform: translateY(1px) scale(0.95); box-shadow: none; }
-
+/* PARTICLES */
 .particle {
   position: absolute;
   width: 8px;
   height: 8px;
-  background: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.5);
   border-radius: 50%;
   pointer-events: none;
   animation: float 4s ease-in-out infinite;
 }
-body.dark .particle { background: rgba(200,200,255,0.8); }
+body.dark .particle { background: rgba(200,200,255,0.5); }
+@keyframes float { 0%{transform:translateY(0)} 50%{transform:translateY(-15px)} 100%{transform:translateY(0)} }
 
-@keyframes float {
-  0% {transform: translateY(0px);}
-  50% {transform: translateY(-15px);}
-  100% {transform: translateY(0px);}
-}
 </style>
 </head>
 <body>
+
 <div class="card" id="tiltCard">
   <h1>Downloads</h1>
   <input type="text" class="search-input" placeholder="Search downloads..." id="searchInput">
   <div class="downloads" id="downloadsContainer">
-    <div class="download-btn" onclick="location.href='/download1'">
+    <div class="download-btn" onclick="openLink('/download1')">
       <img src="https://via.placeholder.com/150" alt="Download 1">
       <span>Download 1</span>
     </div>
-    <div class="download-btn" onclick="location.href='/download2'">
+    <div class="download-btn" onclick="openLink('/download2')">
       <img src="https://via.placeholder.com/150" alt="Download 2">
       <span>Download 2</span>
     </div>
-    <div class="download-btn" onclick="location.href='/download3'">
+    <div class="download-btn" onclick="openLink('/download3')">
       <img src="https://via.placeholder.com/150" alt="Download 3">
       <span>Download 3</span>
     </div>
-    <div class="download-btn" onclick="location.href='/download4'">
+    <div class="download-btn" onclick="openLink('/download4')">
       <img src="https://via.placeholder.com/150" alt="Download 4">
       <span>Download 4</span>
     </div>
-    <div class="download-btn" onclick="location.href='/download5'">
+    <div class="download-btn" onclick="openLink('/download5')">
       <img src="https://via.placeholder.com/150" alt="Download 5">
       <span>Download 5</span>
     </div>
   </div>
 </div>
 
-<button class="dark-toggle" id="darkToggle"><i class="fas fa-moon"></i></button>
+<button id="darkToggle"><i class="fas fa-moon"></i></button>
+<audio id="clickSound" src="click.mp3"></audio>
 
 <script>
+// Tilt effect
 const tiltCard = document.getElementById('tiltCard');
-const body = document.body;
 tiltCard.addEventListener('mousemove', e => {
   const rect = tiltCard.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
-  const rotateX = ((y - rect.height/2)/(rect.height/2)) * -15;
-  const rotateY = ((x - rect.width/2)/(rect.width/2)) * 15;
+  const rotateX = ((y - rect.height/2)/(rect.height/2)) * -10;
+  const rotateY = ((x - rect.width/2)/(rect.width/2)) * 10;
   tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
 });
 tiltCard.addEventListener('mouseleave', () => {
   tiltCard.style.transition = 'transform 0.5s ease';
   tiltCard.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
-  setTimeout(() => tiltCard.style.transition='',500);
+  setTimeout(()=> tiltCard.style.transition='',500);
 });
 
-document.addEventListener('mousemove', e => {
-  const xPercent = e.clientX / window.innerWidth - 0.5;
-  const yPercent = e.clientY / window.innerHeight - 0.5;
-  const moveX = xPercent * 40;
-  const moveY = yPercent * 40;
-  body.style.backgroundPosition = `${50 + moveX}% ${50 + moveY}%`;
-});
-
+// Floating particles
 function createParticles(count){
+  const body = document.body;
   for(let i=0;i<count;i++){
-    const p=document.createElement('div');
-    p.classList.add('particle');
+    const p = document.createElement('div');
+    p.className='particle';
     p.style.left=Math.random()*100+'vw';
     p.style.top=Math.random()*100+'vh';
     p.style.animationDuration=3+Math.random()*2+'s';
@@ -207,19 +219,45 @@ function createParticles(count){
 }
 createParticles(25);
 
+// Dark mode
 const darkToggle = document.getElementById('darkToggle');
-darkToggle.addEventListener('click', () => { body.classList.toggle('dark'); });
+const body = document.body;
+const clickSound = document.getElementById('clickSound');
+if(localStorage.getItem('theme')==='dark') body.classList.add('dark');
+darkToggle.addEventListener('click', () => {
+  body.classList.toggle('dark');
+  localStorage.setItem('theme', body.classList.contains('dark')?'dark':'light');
+  clickSound.currentTime=0; clickSound.play();
+  darkToggle.innerHTML = body.classList.contains('dark') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+});
 
-document.addEventListener('DOMContentLoaded', () => {
+// Download buttons click sound
+function openLink(url){
+  clickSound.currentTime=0;
+  clickSound.play();
+  window.location.href=url;
+}
+
+// Search filter
+document.addEventListener('DOMContentLoaded',()=>{
   const searchInput = document.getElementById('searchInput');
   const downloadsContainer = document.getElementById('downloadsContainer');
-  searchInput.addEventListener('input', () => {
+  searchInput.addEventListener('input',()=>{
     const filter = searchInput.value.toLowerCase();
-    Array.from(downloadsContainer.children).forEach(btn => {
+    Array.from(downloadsContainer.children).forEach(btn=>{
       const text = btn.querySelector('span').textContent.toLowerCase();
-      btn.style.display = text.includes(filter) ? 'flex' : 'none';
+      btn.style.display = text.includes(filter)?'flex':'none';
     });
   });
+});
+
+// Background movement based on cursor
+document.addEventListener('mousemove', e=>{
+  const xPercent = e.clientX/window.innerWidth - 0.5;
+  const yPercent = e.clientY/window.innerHeight - 0.5;
+  const moveX = xPercent*40;
+  const moveY = yPercent*40;
+  body.style.backgroundPosition = `${50 + moveX}% ${50 + moveY}%`;
 });
 </script>
 </body>
