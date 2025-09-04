@@ -1,133 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Welcome,</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome!</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="icon" href="favicon.png" type="image/png">
 <style>
+:root {
+  --primary: #ff7eb3;
+  --secondary: #65d6ce;
+  --accent: #f6d365;
+  --bg-light: #f0f8ff;
+  --bg-dark: #1a1a2e;
+  --text-light: #111;
+  --text-dark: #fff;
+  --glass-radius: 25px;
+  --button-radius: 20px;
+}
+
 body {
-  margin:0;height:100vh;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-  background:linear-gradient(270deg,#ff7eb3,#65d6ce,#f6d365,#a18cd1);
-  background-size:800% 800%;animation:gradientMove 15s ease infinite;
-  overflow:hidden;display:flex;flex-direction:column;transition:background 0.5s,color 0.5s;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: background 0.5s, color 0.5s;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+  background-size: 400% 400%;
+  animation: gradientMove 15s ease infinite;
+  color: var(--text-light);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  overflow-x: hidden;
 }
-@keyframes gradientMove {0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
-.window {
-  flex:1;margin:20px;border-radius:30px;background:rgba(255,255,255,0.1);
-  backdrop-filter:blur(30px) saturate(200%);-webkit-backdrop-filter:blur(30px) saturate(200%);
-  border:1px solid rgba(255,255,255,0.3);box-shadow:0 20px 40px rgba(0,0,0,0.15),inset 0 0 50px rgba(255,255,255,0.1);
-  position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;transition:all 0.3s ease;
+
+body.dark {
+  background: linear-gradient(135deg, #1e1e2f, #282830, #111, #222233);
+  color: var(--text-dark);
 }
-.window::before {
-  content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;
-  background:linear-gradient(120deg,rgba(255,255,255,0.2)0%,rgba(255,255,255,0.05)50%,rgba(255,255,255,0.2)100%);
-  transform:rotate(25deg) translateX(-100%);animation:shine 3s infinite;pointer-events:none;
+
+@keyframes gradientMove {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
-@keyframes shine {0%{transform:rotate(25deg) translateX(-100%);}100%{transform:rotate(25deg) translateX(100%);}}
-.taskbar {
-  position:fixed;bottom:0;left:0;width:100%;height:60px;background:rgba(255,255,255,0.2);backdrop-filter:blur(20px);
-  display:flex;align-items:center;padding:0 20px;box-shadow:0 -2px 10px rgba(0,0,0,0.2);justify-content:space-between;
+
+h1 {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 50px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
-.taskbar-left,.taskbar-right {display:flex;align-items:center;}
-.taskbar button {
-  margin-right:15px;padding:8px 15px;border:none;border-radius:12px;
-  background:linear-gradient(135deg,#65d6ce,#ff7eb3);color:#fff;font-weight:bold;cursor:pointer;
-  transition:transform 0.2s ease,box-shadow 0.2s ease;position:relative;
+
+/* GLASS CARD BUTTONS */
+.card {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(15px) saturate(180%);
+  -webkit-backdrop-filter: blur(15px) saturate(180%);
+  border-radius: var(--glass-radius);
+  padding: 30px 50px;
+  margin: 20px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+  position: relative;
 }
-.taskbar button:hover {transform:translateY(-5px) scale(1.05);box-shadow:0 10px 20px rgba(0,0,0,0.4);z-index:10;}
-#startMenu {
-  position:fixed;bottom:60px;left:10px;width:250px;background:rgba(255,255,255,0.9);border:2px solid #ff7eb3;border-radius:12px;
-  display:none;flex-direction:column;padding:10px;backdrop-filter:blur(10px);box-shadow:0 5px 20px rgba(0,0,0,0.5);
-  transform-origin:bottom left;opacity:0;transition:background 0.5s,border 0.5s,transform 0.3s ease,opacity 0.3s ease;
+
+.card:hover {
+  transform: translateY(-10px) scale(1.05) rotateZ(1deg);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+  background: rgba(255,255,255,0.25);
 }
-#startMenu.show {display:flex;opacity:1;transform:scale(1) translateY(0);}
-#startMenu .profile {display:flex;align-items:center;padding:10px;margin-bottom:10px;border-bottom:1px solid #ff7eb3;}
-#startMenu .profile img {width:40px;height:40px;border-radius:50%;margin-right:10px;}
-#startMenu .profile span {font-weight:bold;color:#000;}
-#startMenu .profile button {margin-left:auto;background:none;border:none;font-size:18px;cursor:pointer;color:#000;transition:color 0.3s;}
-#startMenu button {
-  margin:5px 0;padding:8px 15px;border:none;border-radius:8px;
-  background:linear-gradient(135deg,#65d6ce,#ff7eb3);color:#fff;font-weight:bold;cursor:pointer;text-align:left;
-  transition:background 0.2s,transform 0.2s;
+
+body.dark .card {
+  background: rgba(0,0,0,0.3);
 }
-#startMenu button:hover {background:linear-gradient(135deg,#ff7eb3,#65d6ce);transform:translateX(3px);}
-#clock {
-  font-weight:bold;color:#fff;padding:6px 12px;border:none;border-radius:6px;background:rgba(255,255,255,0.1);
-  cursor:pointer;user-select:none;transition:background 0.2s,transform 0.2s ease;
+
+/* DARK MODE TOGGLE */
+#darkToggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  border: none;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #fff;
+  font-size: 1.5rem;
+  padding: 12px 18px;
+  border-radius: var(--button-radius);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  z-index: 100;
 }
-#clock:hover {background:rgba(255,255,255,0.25);transform:scale(1.05);}
-.widget {
-  position:absolute;width:120px;height:120px;background:rgba(255,255,255,0.15);backdrop-filter:blur(20px) saturate(200%);
-  -webkit-backdrop-filter:blur(20px) saturate(200%);border-radius:20px;display:flex;justify-content:center;align-items:center;
-  color:#fff;font-weight:bold;cursor:pointer;user-select:none;transition:background 0.3s,transform 0.2s;
+#darkToggle:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
-.widget:hover {background:rgba(255,255,255,0.25);transform:scale(1.05);}
-.widget-header {width:100%;height:30px;cursor:grab;position:absolute;top:0;left:0;border-bottom:1px solid rgba(255,255,255,0.2);
-  display:flex;justify-content:flex-end;align-items:center;padding:0 5px;box-sizing:border-box;}
-.window-header {width:100%;height:35px;cursor:grab;display:flex;justify-content:flex-end;align-items:center;padding:0 10px;box-sizing:border-box;}
-.close-btn {font-size:24px;width:35px;height:35px;line-height:35px;border:none;border-radius:8px;cursor:pointer;transition:background 0.3s,color 0.3s;}
-.close-btn:hover {background:rgba(255,255,255,0.2);}
-body.dark {background:linear-gradient(270deg,#1a1a1a,#222,#333,#111);color:#fff;}
-body.dark .window {background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 40px rgba(0,0,0,0.5),inset 0 0 50px rgba(255,255,255,0.05);}
-body.dark .widget {background:rgba(255,255,255,0.15);}
-body.dark #startMenu {background:rgba(0,0,0,0.9);border:2px solid #65d6ce;}
-body.dark #startMenu .profile span,body.dark #startMenu .profile button,body.dark #startMenu button {color:#fff;}
-body.dark .close-btn {color:#fff;background:rgba(255,255,255,0.1);}
-#calendar {
-  position:fixed;bottom:70px;right:20px;width:280px;padding:10px;border-radius:12px;
-  background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);display:none;flex-direction:column;
-  box-shadow:0 5px 20px rgba(0,0,0,0.4);z-index:100;animation:fadeIn 0.2s ease;
+
+/* FLOATING BUBBLES */
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.2;
+  pointer-events: none;
+  animation: floatBubble 8s linear infinite;
 }
-#calendar table {width:100%;border-collapse:collapse;text-align:center;}
-#calendar th,#calendar td {padding:8px;border-radius:6px;cursor:pointer;transition:background 0.2s;}
-#calendar th {font-weight:bold;}
-#calendar td:hover {background:rgba(0,0,0,0.1);}
-body.dark #calendar {background:rgba(0,0,0,0.95);color:#fff;}
-body.dark #calendar td:hover {background:rgba(255,255,255,0.1);}
-@keyframes fadeIn {from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes floatBubble {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-300px) scale(1.3); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* CLICK SOUND EFFECT */
+button, .card { user-select:none; }
+
+footer {
+  margin-top: auto;
+  padding: 20px;
+  font-size: 0.9rem;
+  color: rgba(0,0,0,0.6);
+}
+body.dark footer { color: rgba(255,255,255,0.5); }
 </style>
 </head>
 <body>
-<audio id="ambience" src="ambience.mp3" loop autoplay muted></audio>
-<div class="window" id="mainWindow">
-  <h1>Welcome,</h1>
-  <p>Select an app from the taskbar or Start menu</p>
-  <div class="widget" id="widget1" style="top:50px;left:50px;"><div class="widget-header"></div>Widget 1</div>
-  <div class="widget" id="widget2" style="top:50px;left:200px;"><div class="widget-header"></div>Widget 2</div>
-  <div class="widget" id="widget3" style="top:50px;left:350px;"><div class="widget-header"></div>Widget 3</div>
+
+<button id="darkToggle"><i class="fas fa-moon"></i></button>
+
+<h1>Welcome!</h1>
+
+<div class="card" onclick="openLink('https://nefarious.site/downloads')">
+  <i class="fas fa-download"></i> Downloads
 </div>
-<div id="startMenu">
-  <div class="profile"><img src="Avatar.png" alt="Profile"><span>Guest32k</span><button id="darkToggle"><i class="fas fa-moon"></i></button></div>
-  <button onclick="openApp('https://nefarious.site/downloads')"><i class="fas fa-download"></i> Downloads</button>
-  <button onclick="alert('Media Player opened')"><i class="fas fa-music"></i> Media Player</button>
-  <button onclick="alert('Three opened')"><i class="fas fa-folder"></i> Three</button>
-  <button onclick="alert('Four opened')"><i class="fas fa-cogs"></i> Four</button>
+
+<div class="card" onclick="openLink('https://nefarious.site/about')">
+  <i class="fas fa-link"></i> About
 </div>
-<div class="taskbar">
-  <div class="taskbar-left" id="taskbarApps"><button id="startBtn"><i class="fas fa-windows"></i> Start</button></div>
-  <div class="taskbar-right"><span id="clock"></span></div>
-</div>
-<div id="calendar"></div>
+
+<footer>&copy; 2025 Nefarious Hub</footer>
+
+<audio id="clickSound" src="click.mp3"></audio>
+
 <script>
-const startBtn=document.getElementById('startBtn'),startMenu=document.getElementById('startMenu');
-startBtn.addEventListener('click',()=>{if(startMenu.classList.contains('show')){startMenu.classList.remove('show');setTimeout(()=>startMenu.style.display='none',300);}else{startMenu.style.display='flex';void startMenu.offsetWidth;startMenu.classList.add('show');}});
-function updateClock(){const now=new Date();let h=now.getHours(),ampm=h>=12?'PM':'AM';h=h%12||12;const m=now.getMinutes().toString().padStart(2,'0');const s=now.getSeconds().toString().padStart(2,'0');document.getElementById('clock').textContent=`${h}:${m}:${s} ${ampm}`;}
-setInterval(updateClock,1000);updateClock();
-document.addEventListener('mousemove',e=>{const x=e.clientX/window.innerWidth-0.5,y=e.clientY/window.innerHeight-0.5;document.body.style.backgroundPosition=`${50+x*40}% ${50+y*40}%`;});
-const clickSound=new Audio('click.mp3');function playClickSound(){clickSound.currentTime=0;clickSound.play();}
-document.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',playClickSound));
-document.querySelectorAll('.widget').forEach(w=>{dragElement(w,w.querySelector('.widget-header'));w.addEventListener('click',()=>playClickSound());});
-function dragElement(el,h){let p1=0,p2=0,p3=0,p4=0;h.onmousedown=dMD;function dMD(e){e.preventDefault();p3=e.clientX;p4=e.clientY;document.onmouseup=cDE;document.onmousemove=eD;}function eD(e){e.preventDefault();p1=p3-e.clientX;p2=p4-e.clientY;p3=e.clientX;p4=e.clientY;el.style.top=(el.offsetTop-p2)+"px";el.style.left=(el.offsetLeft-p1)+"px";}function cDE(){document.onmouseup=null;document.onmousemove=null;}}
-const darkToggle=document.getElementById('darkToggle'),body=document.body;if(localStorage.getItem('theme')==='dark')body.classList.add('dark');function updateIcon(){darkToggle.innerHTML=body.classList.contains('dark')?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';}updateIcon();
-darkToggle.addEventListener('click',()=>{body.classList.toggle('dark');localStorage.setItem('theme',body.classList.contains('dark')?'dark':'light');updateIcon();playClickSound();});
-function makeDraggable(el){const h=el.querySelector('.window-header');let oX,oY,isD=false,ifrm=el.querySelector('iframe');h.addEventListener('mousedown',e=>{isD=true;oX=e.clientX-el.offsetLeft;oY=e.clientY-el.offsetTop;el.style.cursor='grabbing';if(ifrm)ifrm.style.pointerEvents='none';});document.addEventListener('mousemove',e=>{if(isD){el.style.left=Math.max(0,Math.min(e.clientX-oX,window.innerWidth-el.offsetWidth))+'px';el.style.top=Math.max(0,Math.min(e.clientY-oY,window.innerHeight-el.offsetHeight-60))+'px';}});document.addEventListener('mouseup',()=>{isD=false;el.style.cursor='default';if(ifrm)ifrm.style.pointerEvents='auto';});}
-function openApp(url){playClickSound();const w=document.createElement('div');w.classList.add('window');w.style.width='500px';w.style.height='400px';w.style.top='50px';w.style.left='50px';w.style.position='absolute';w.innerHTML=`<div class="window-header"><button class="close-btn" onclick="this.parentElement.parentElement.remove();playClickSound();">×</button></div><iframe src="${url}" style="width:100%;height:calc(100% - 35px);border:none;border-radius:0 0 30px 30px;"></iframe>`;document.body.appendChild(w);makeDraggable(w);w.style.transform='scale(0.9) translateY(-20px)';w.style.opacity='0';setTimeout(()=>{w.style.transition='all 0.3s ease';w.style.transform='scale(1) translateY(0)';w.style.opacity='1';},10);}
-const ambience=document.getElementById('ambience');document.addEventListener('click',()=>{if(ambience.muted){ambience.muted=false;ambience.play();}},{once:true});
-function buildCalendar(){const c=document.getElementById('calendar');c.innerHTML='';const now=new Date(),m=now.getMonth(),y=now.getFullYear(),days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];let html='<table><thead><tr>'+days.map(d=>`<th>${d}</th>`).join('')+'</tr></thead><tbody>';const f=new Date(y,m,1),start=f.getDay(),total=new Date(y,m+1,0).getDate();let day=1;for(let i=0;i<6;i++){html+='<tr>';for(let j=0;j<7;j++){if((i===0&&j<start)||day>total){html+='<td></td>';}else{html+=`<td>${day}</td>`;day++;}}html+='</tr>';if(day>total)break;}html+='</tbody></table>';c.innerHTML=html;c.querySelectorAll('td').forEach(td=>{td.addEventListener('click',()=>{if(td.textContent.trim()){playClickSound();alert(`Selected: ${now.toLocaleString('default',{month:'long'})} ${td.textContent}, ${y}`);}});});}
-document.getElementById('clock').addEventListener('click',()=>{const c=document.getElementById('calendar');if(c.style.display==='flex'){c.style.display='none';}else{buildCalendar();c.style.display='flex';}});
-document.addEventListener('click',e=>{const c=document.getElementById('calendar'),clk=document.getElementById('clock');if(c.style.display==='flex'&&!clk.contains(e.target)&&!c.contains(e.target))c.style.display='none';});
+document.addEventListener("DOMContentLoaded", () => {
+  const darkToggle = document.getElementById('darkToggle');
+  const body = document.body;
+  const clickSound = document.getElementById('clickSound');
+
+  // Load theme
+  if (localStorage.getItem('theme') === 'dark') body.classList.add('dark');
+
+  function updateIcon() {
+    darkToggle.innerHTML = body.classList.contains('dark') 
+      ? '<i class="fas fa-sun"></i>' 
+      : '<i class="fas fa-moon"></i>';
+  }
+  updateIcon();
+
+  // Dark mode toggle
+  darkToggle.addEventListener('click', () => {
+    body.classList.toggle('dark');
+    localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
+    updateIcon();
+    clickSound.currentTime = 0; clickSound.play();
+  });
+
+  // Floating bubbles
+  for(let i=0;i<30;i++){
+    const b = document.createElement('div');
+    b.className = 'bubble';
+    const size = 10 + Math.random()*50;
+    b.style.width=b.style.height=size+'px';
+    b.style.left=Math.random()*100+'vw';
+    b.style.top=Math.random()*100+'vh';
+    b.style.animationDuration=(5+Math.random()*5)+'s';
+    b.style.background='radial-gradient(circle,#ff7eb3,#65d6ce)';
+    document.body.appendChild(b);
+  }
+
+  // GLOBAL click sound for all buttons and .card divs
+  document.querySelectorAll('button, .card').forEach(el => {
+    el.addEventListener('click', () => {
+      clickSound.currentTime = 0;
+      clickSound.play();
+    });
+  });
+});
+
+// Open links
+function openLink(url){
+  window.open(url,'_blank');
+}
 </script>
 </body>
 </html>
