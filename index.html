@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <link rel="icon" href="favicon.png" type="image/png">
 <style>
-/* GENERAL STYLES */
 body {
   margin:0;
   height:100vh;
@@ -25,8 +24,6 @@ body {
   50% {background-position:100% 50%;}
   100% {background-position:0% 50%;}
 }
-
-/* APPLE GLASS WINDOWS */
 .window {
   flex: 1;
   margin: 20px;
@@ -60,8 +57,6 @@ body {
   0% { transform: rotate(25deg) translateX(-100%); }
   100% { transform: rotate(25deg) translateX(100%); }
 }
-
-/* TASKBAR */
 .taskbar {
   position:fixed;
   bottom:0;
@@ -93,12 +88,30 @@ body {
   position:relative;
 }
 .taskbar button:hover {
-  transform: translateY(-10px) scale(1.1);
+  transform: translateY(-5px) scale(1.05);
   box-shadow:0 10px 20px rgba(0,0,0,0.4);
   z-index:10;
 }
-
-/* START MENU */
+#startBtn {
+  width:50px;
+  height:50px;
+  border-radius:10px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:0;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  transition: background 0.3s, transform 0.2s;
+}
+#startBtn i {
+  font-size:22px;
+  color:white;
+}
+#startBtn:hover {
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.1);
+}
 #startMenu {
   position:fixed;
   bottom:60px;
@@ -160,13 +173,10 @@ body {
   transition: background 0.2s, transform 0.2s;
 }
 #startMenu button:hover { background: linear-gradient(135deg, #ff7eb3, #65d6ce); transform:translateX(3px); }
-
 #clock {
   font-weight:bold;
   color:#fff;
 }
-
-/* WIDGETS */
 .widget {
   position:absolute;
   width:120px;
@@ -188,8 +198,6 @@ body {
   background: rgba(255,255,255,0.25);
   transform: scale(1.05);
 }
-
-/* WIDGET DRAG HEADER STYLE */
 .widget-header {
   width:100%;
   height:30px;
@@ -204,8 +212,6 @@ body {
   padding:0 5px;
   box-sizing:border-box;
 }
-
-/* APP WINDOW HEADER */
 .window-header {
   width:100%;
   height:35px;
@@ -229,8 +235,6 @@ body {
 .close-btn:hover {
   background: rgba(255,255,255,0.2);
 }
-
-/* DARK THEME */
 body.dark {
   background: linear-gradient(270deg, #1a1a1a, #222, #333, #111);
   color: #fff;
@@ -256,27 +260,14 @@ body.dark .close-btn { color:#fff; background: rgba(255,255,255,0.1); }
 </style>
 </head>
 <body>
-
 <audio id="ambience" src="ambience.mp3" loop autoplay muted></audio>
-
 <div class="window" id="mainWindow">
   <h1>Welcome,</h1>
   <p>Select an app from the taskbar or Start menu</p>
-  
-  <div class="widget" id="widget1" style="top:50px; left:50px;">
-    <div class="widget-header"></div>
-    Widget 1
-  </div>
-  <div class="widget" id="widget2" style="top:50px; left:200px;">
-    <div class="widget-header"></div>
-    Widget 2
-  </div>
-  <div class="widget" id="widget3" style="top:50px; left:350px;">
-    <div class="widget-header"></div>
-    Widget 3
-  </div>
+  <div class="widget" id="widget1" style="top:50px; left:50px;"><div class="widget-header"></div>Widget 1</div>
+  <div class="widget" id="widget2" style="top:50px; left:200px;"><div class="widget-header"></div>Widget 2</div>
+  <div class="widget" id="widget3" style="top:50px; left:350px;"><div class="widget-header"></div>Widget 3</div>
 </div>
-
 <div id="startMenu">
   <div class="profile">
     <img src="Avatar.png" alt="Profile">
@@ -288,18 +279,13 @@ body.dark .close-btn { color:#fff; background: rgba(255,255,255,0.1); }
   <button onclick="alert('Three opened')"><i class="fas fa-folder"></i> Three</button>
   <button onclick="alert('Four opened')"><i class="fas fa-cogs"></i> Four</button>
 </div>
-
 <div class="taskbar">
   <div class="taskbar-left" id="taskbarApps">
-    <button id="startBtn"><i class="fas fa-windows"></i> Start</button>
+    <button id="startBtn"><i class="fab fa-windows"></i></button>
   </div>
-  <div class="taskbar-right">
-    <span id="clock"></span>
-  </div>
+  <div class="taskbar-right"><span id="clock"></span></div>
 </div>
-
 <script>
-// START MENU TOGGLE
 const startBtn = document.getElementById('startBtn');
 const startMenu = document.getElementById('startMenu');
 startBtn.addEventListener('click', ()=> {
@@ -312,8 +298,6 @@ startBtn.addEventListener('click', ()=> {
     startMenu.classList.add('show');
   }
 });
-
-// CLOCK
 function updateClock(){
   const now = new Date();
   let hours = now.getHours();
@@ -325,8 +309,6 @@ function updateClock(){
 }
 setInterval(updateClock,1000);
 updateClock();
-
-// BACKGROUND MOVEMENT
 document.addEventListener('mousemove', e => {
   const xPercent = e.clientX / window.innerWidth - 0.5;
   const yPercent = e.clientY / window.innerHeight - 0.5;
@@ -334,25 +316,19 @@ document.addEventListener('mousemove', e => {
   const moveY = yPercent * 40;
   document.body.style.backgroundPosition = `${50 + moveX}% ${50 + moveY}%`;
 });
-
-// CLICK SOUND
 const clickSound = new Audio('click.mp3');
 function playClickSound(){
   clickSound.currentTime = 0;
   clickSound.play();
 }
-
-// WIDGET DRAGGING BASED ON HEADER
 const widgets = document.querySelectorAll('.widget');
 widgets.forEach(widget => {
   dragElement(widget, widget.querySelector('.widget-header'));
   widget.addEventListener('click', () => playClickSound());
 });
-
 function dragElement(elmnt, handle) {
   let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
   handle.onmousedown = dragMouseDown;
-
   function dragMouseDown(e) {
     e.preventDefault();
     pos3 = e.clientX;
@@ -360,7 +336,6 @@ function dragElement(elmnt, handle) {
     document.onmouseup = closeDragElement;
     document.onmousemove = elementDrag;
   }
-
   function elementDrag(e) {
     e.preventDefault();
     pos1 = pos3 - e.clientX;
@@ -370,14 +345,11 @@ function dragElement(elmnt, handle) {
     elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
     elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
   }
-
   function closeDragElement() {
     document.onmouseup = null;
     document.onmousemove = null;
   }
 }
-
-// THEME TOGGLE
 const darkToggle = document.getElementById('darkToggle');
 const body = document.body;
 if (localStorage.getItem('theme') === 'dark') body.classList.add('dark');
@@ -391,13 +363,10 @@ darkToggle.addEventListener('click', () => {
   updateIcon();
   playClickSound();
 });
-
-// OPEN APP WINDOWS WITH DRAGGABLE HEADER
 function makeDraggable(el){
   const header = el.querySelector('.window-header');
   let offsetX, offsetY, isDragging=false;
   let iframe = el.querySelector('iframe');
-
   header.addEventListener('mousedown', e => {
     isDragging = true;
     offsetX = e.clientX - el.offsetLeft;
@@ -405,21 +374,18 @@ function makeDraggable(el){
     el.style.cursor = 'grabbing';
     if(iframe) iframe.style.pointerEvents = 'none';
   });
-
   document.addEventListener('mousemove', e => {
     if(isDragging){
       el.style.left = Math.max(0, Math.min(e.clientX - offsetX, window.innerWidth - el.offsetWidth)) + 'px';
       el.style.top = Math.max(0, Math.min(e.clientY - offsetY, window.innerHeight - el.offsetHeight - 60)) + 'px';
     }
   });
-
   document.addEventListener('mouseup', () => {
     isDragging = false;
     el.style.cursor = 'default';
     if(iframe) iframe.style.pointerEvents = 'auto';
   });
 }
-
 function openApp(url){
   playClickSound();
   const appWindow=document.createElement('div');
@@ -437,7 +403,6 @@ function openApp(url){
   `;
   document.body.appendChild(appWindow);
   makeDraggable(appWindow);
-
   appWindow.style.transform='scale(0.9) translateY(-20px)';
   appWindow.style.opacity='0';
   setTimeout(()=>{
@@ -446,8 +411,6 @@ function openApp(url){
     appWindow.style.opacity='1';
   },10);
 }
-
-// AMBIENCE AUDIO
 const ambience = document.getElementById('ambience');
 document.addEventListener('click', () => {
   if(ambience.muted){
@@ -455,8 +418,6 @@ document.addEventListener('click', () => {
     ambience.play();
   }
 }, { once: true });
-
-// ADD CLICK SOUND TO ALL BUTTONS
 document.querySelectorAll('button').forEach(btn => btn.addEventListener('click', playClickSound));
 </script>
 </body>
