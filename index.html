@@ -93,26 +93,6 @@ body {
   box-shadow:0 10px 20px rgba(0,0,0,0.4);
   z-index:10;
 }
-#startBtn {
-  width:50px;
-  height:50px;
-  border-radius:10px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:0;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(10px);
-  transition: background 0.3s, transform 0.2s;
-}
-#startBtn i {
-  font-size:22px;
-  color:white;
-}
-#startBtn:hover {
-  background: rgba(255,255,255,0.3);
-  transform: scale(1.1);
-}
 #startMenu {
   position:fixed;
   bottom:60px;
@@ -126,7 +106,7 @@ body {
   padding:10px;
   backdrop-filter: blur(10px);
   box-shadow:0 5px 20px rgba(0,0,0,0.5);
-  transition: background 0.5s, border 0.5s, transform 0.3s ease, opacity 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
   transform-origin: bottom left;
   opacity:0;
 }
@@ -148,10 +128,7 @@ body {
   border-radius:50%;
   margin-right:10px;
 }
-#startMenu .profile span {
-  font-weight:bold;
-  color:#000;
-}
+#startMenu .profile span { font-weight:bold; color:#000; }
 #startMenu .profile button {
   margin-left:auto;
   background:none;
@@ -174,62 +151,13 @@ body {
   transition: background 0.2s, transform 0.2s;
 }
 #startMenu button:hover { background: linear-gradient(135deg, #ff7eb3, #65d6ce); transform:translateX(3px); }
-#clock {
-  font-weight:bold;
-  color:#fff;
-  padding:0 10px;
-  cursor:pointer;
-  user-select:none;
-}
-#calendar {
-  position:fixed;
-  bottom:70px;
-  right:20px;
-  width:280px;
-  background:rgba(255,255,255,0.9);
-  border:2px solid #ff7eb3;
-  border-radius:12px;
-  backdrop-filter:blur(15px);
-  box-shadow:0 5px 20px rgba(0,0,0,0.5);
-  padding:15px;
-  display:none;
-  flex-direction:column;
-  color:#000;
-  z-index:100;
-  animation:fadeIn 0.3s ease;
-}
-@keyframes fadeIn {
-  from{opacity:0; transform:translateY(20px);}
-  to{opacity:1; transform:translateY(0);}
-}
-#calendar table {
-  width:100%;
-  border-collapse:collapse;
-  text-align:center;
-}
-#calendar th {
-  padding:5px 0;
-  font-weight:bold;
-}
-#calendar td {
-  padding:5px 0;
-  border-radius:6px;
-  transition:background 0.2s;
-}
-#calendar td:hover {
-  background:rgba(255,255,255,0.3);
-}
-body.dark #calendar {
-  background:rgba(0,0,0,0.9);
-  border:2px solid #65d6ce;
-  color:#fff;
-}
 .widget {
   position:absolute;
   width:120px;
   height:120px;
   background: rgba(255,255,255,0.15);
   backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
   border-radius:20px;
   display:flex;
   justify-content:center;
@@ -278,9 +206,56 @@ body.dark #calendar {
   cursor:pointer;
   transition: background 0.3s, color 0.3s;
 }
-.close-btn:hover {
-  background: rgba(255,255,255,0.2);
+.close-btn:hover { background: rgba(255,255,255,0.2); }
+#clock {
+  font-weight:bold;
+  color:#fff;
+  padding:8px 15px;
+  border:none;
+  border-radius:12px;
+  background: linear-gradient(135deg, #65d6ce, #ff7eb3);
+  cursor:pointer;
+  user-select:none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+#clock:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow:0 10px 20px rgba(0,0,0,0.4);
+}
+#calendar {
+  position:fixed;
+  bottom:70px;
+  right:20px;
+  width:280px;
+  background:rgba(255,255,255,0.9);
+  border:2px solid #ff7eb3;
+  border-radius:12px;
+  backdrop-filter:blur(15px);
+  box-shadow:0 5px 20px rgba(0,0,0,0.5);
+  padding:15px;
+  display:none;
+  flex-direction:column;
+  color:#000;
+  z-index:100;
+  animation:fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1; transform:translateY(0);}
+}
+#calendar table {
+  width:100%;
+  border-collapse:collapse;
+  text-align:center;
+}
+#calendar th { padding:5px 0; font-weight:bold; }
+#calendar td {
+  padding:5px 0;
+  border-radius:6px;
+  cursor:pointer;
+  transition:background 0.2s;
+}
+#calendar td:hover { background:rgba(255,255,255,0.3); }
 body.dark {
   background: linear-gradient(270deg, #1a1a1a, #222, #333, #111);
   color: #fff;
@@ -290,30 +265,40 @@ body.dark .window {
   border: 1px solid rgba(255,255,255,0.1);
   box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 0 50px rgba(255,255,255,0.05);
 }
-body.dark .widget {
-  background: rgba(255,255,255,0.15);
-}
+body.dark .widget { background: rgba(255,255,255,0.15); }
 body.dark #startMenu {
   background: rgba(0,0,0,0.9);
   border:2px solid #65d6ce;
 }
 body.dark #startMenu .profile span,
 body.dark #startMenu .profile button,
-body.dark #startMenu button {
+body.dark #startMenu button { color:#fff; }
+body.dark .close-btn { color:#fff; background: rgba(255,255,255,0.1); }
+body.dark #calendar {
+  background:rgba(0,0,0,0.9);
+  border:2px solid #65d6ce;
   color:#fff;
 }
-body.dark .close-btn { color:#fff; background: rgba(255,255,255,0.1); }
 </style>
 </head>
 <body>
 <audio id="ambience" src="ambience.mp3" loop autoplay muted></audio>
+<audio id="clickSound" src="click.mp3"></audio>
+
 <div class="window" id="mainWindow">
   <h1>Welcome,</h1>
   <p>Select an app from the taskbar or Start menu</p>
-  <div class="widget" id="widget1" style="top:50px; left:50px;"><div class="widget-header"></div>Widget 1</div>
-  <div class="widget" id="widget2" style="top:50px; left:200px;"><div class="widget-header"></div>Widget 2</div>
-  <div class="widget" id="widget3" style="top:50px; left:350px;"><div class="widget-header"></div>Widget 3</div>
+  <div class="widget" id="widget1" style="top:50px; left:50px;">
+    <div class="widget-header"></div>Widget 1
+  </div>
+  <div class="widget" id="widget2" style="top:50px; left:200px;">
+    <div class="widget-header"></div>Widget 2
+  </div>
+  <div class="widget" id="widget3" style="top:50px; left:350px;">
+    <div class="widget-header"></div>Widget 3
+  </div>
 </div>
+
 <div id="startMenu">
   <div class="profile">
     <img src="Avatar.png" alt="Profile">
@@ -325,77 +310,30 @@ body.dark .close-btn { color:#fff; background: rgba(255,255,255,0.1); }
   <button onclick="alert('Three opened')"><i class="fas fa-folder"></i> Three</button>
   <button onclick="alert('Four opened')"><i class="fas fa-cogs"></i> Four</button>
 </div>
+
 <div id="calendar"></div>
+
 <div class="taskbar">
-  <div class="taskbar-left" id="taskbarApps">
-    <button id="startBtn"><i class="fab fa-windows"></i></button>
-  </div>
+  <div class="taskbar-left"><button id="startBtn"><i class="fab fa-windows"></i></button></div>
   <div class="taskbar-right"><span id="clock"></span></div>
 </div>
+
 <script>
-const startBtn = document.getElementById('startBtn');
-const startMenu = document.getElementById('startMenu');
-startBtn.addEventListener('click', ()=> {
-  if(startMenu.classList.contains('show')){
-    startMenu.classList.remove('show');
-    setTimeout(()=> startMenu.style.display='none', 300);
-  } else {
-    startMenu.style.display='flex';
-    void startMenu.offsetWidth;
-    startMenu.classList.add('show');
-  }
-});
-function updateClock(){
-  const now = new Date();
-  let hours = now.getHours();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12 || 12;
-  const minutes = now.getMinutes().toString().padStart(2,'0');
-  const seconds = now.getSeconds().toString().padStart(2,'0');
-  document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
-}
+const clickSound=document.getElementById('clickSound');function playClickSound(){clickSound.currentTime=0;clickSound.play();}
+const startBtn=document.getElementById('startBtn'),startMenu=document.getElementById('startMenu');startBtn.addEventListener('click',()=>{playClickSound();if(startMenu.classList.contains('show')){startMenu.classList.remove('show');setTimeout(()=>startMenu.style.display='none',300);}else{startMenu.style.display='flex';void startMenu.offsetWidth;startMenu.classList.add('show');}});
+function updateClock(){const now=new Date();let h=now.getHours();const a=h>=12?'PM':'AM';h=h%12||12;const m=now.getMinutes().toString().padStart(2,'0');document.getElementById('clock').textContent=`${h}:${m} ${a}`;}
 setInterval(updateClock,1000);updateClock();
-function buildCalendar(){
-  const calendar=document.getElementById('calendar');
-  const now=new Date();
-  const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
-  const year=now.getFullYear();
-  const month=now.getMonth();
-  const firstDay=new Date(year,month,1).getDay();
-  const daysInMonth=new Date(year,month+1,0).getDate();
-  let html=`<h3 style="text-align:center;margin:0 0 10px;">${monthNames[month]} ${year}</h3><table><tr>`;
-  const dayNames=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  for(let d of dayNames){html+=`<th>${d}</th>`;}
-  html+=`</tr><tr>`;
-  for(let i=0;i<firstDay;i++)html+=`<td></td>`;
-  for(let day=1;day<=daysInMonth;day++){
-    const todayClass=day===now.getDate()?'style="background:rgba(255,255,255,0.3);border-radius:6px;"':'';
-    html+=`<td ${todayClass}>${day}</td>`;
-    if((day+firstDay)%7===0)html+=`</tr><tr>`;
-  }
-  html+=`</tr></table>`;
-  calendar.innerHTML=html;
-}
-const clock=document.getElementById('clock');
-const calendar=document.getElementById('calendar');
-clock.addEventListener('click',()=>{
-  if(calendar.style.display==='flex'){calendar.style.display='none';}
-  else{buildCalendar();calendar.style.display='flex';}
-});
-document.addEventListener('click',e=>{
-  if(!calendar.contains(e.target)&&e.target!==clock)calendar.style.display='none';
-});
-const clickSound = new Audio('click.mp3');
-function playClickSound(){clickSound.currentTime=0;clickSound.play();}
-const widgets=document.querySelectorAll('.widget');
-widgets.forEach(widget=>{dragElement(widget,widget.querySelector('.widget-header'));widget.addEventListener('click',()=>playClickSound());});
-function dragElement(elmnt,handle){let pos1=0,pos2=0,pos3=0,pos4=0;handle.onmousedown=dragMouseDown;function dragMouseDown(e){e.preventDefault();pos3=e.clientX;pos4=e.clientY;document.onmouseup=closeDragElement;document.onmousemove=elementDrag;}function elementDrag(e){e.preventDefault();pos1=pos3-e.clientX;pos2=pos4-e.clientY;pos3=e.clientX;pos4=e.clientY;elmnt.style.top=(elmnt.offsetTop-pos2)+"px";elmnt.style.left=(elmnt.offsetLeft-pos1)+"px";}function closeDragElement(){document.onmouseup=null;document.onmousemove=null;}}
-const darkToggle=document.getElementById('darkToggle');const body=document.body;if(localStorage.getItem('theme')==='dark')body.classList.add('dark');
-function updateIcon(){darkToggle.innerHTML=body.classList.contains('dark')?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';}
-updateIcon();
-darkToggle.addEventListener('click',()=>{body.classList.toggle('dark');localStorage.setItem('theme',body.classList.contains('dark')?'dark':'light');updateIcon();playClickSound();});
-function makeDraggable(el){const header=el.querySelector('.window-header');let offsetX,offsetY,isDragging=false;let iframe=el.querySelector('iframe');header.addEventListener('mousedown',e=>{isDragging=true;offsetX=e.clientX-el.offsetLeft;offsetY=e.clientY-el.offsetTop;el.style.cursor='grabbing';if(iframe)iframe.style.pointerEvents='none';});document.addEventListener('mousemove',e=>{if(isDragging){el.style.left=Math.max(0,Math.min(e.clientX-offsetX,window.innerWidth-el.offsetWidth))+'px';el.style.top=Math.max(0,Math.min(e.clientY-offsetY,window.innerHeight-el.offsetHeight-60))+'px';}});document.addEventListener('mouseup',()=>{isDragging=false;el.style.cursor='default';if(iframe)iframe.style.pointerEvents='auto';});}
-function openApp(url){playClickSound();const appWindow=document.createElement('div');appWindow.classList.add('window');appWindow.style.width='500px';appWindow.style.height='400px';appWindow.style.top='50px';appWindow.style.left='50px';appWindow.style.position='absolute';appWindow.innerHTML=`<div class="window-header"><button class="close-btn" onclick="this.parentElement.parentElement.remove(); playClickSound();">×</button></div><iframe src="${url}" style="width:100%;height:calc(100% - 35px);border:none;border-radius:0 0 30px 30px;"></iframe>`;document.body.appendChild(appWindow);makeDraggable(appWindow);}
+document.addEventListener('mousemove',e=>{const xP=e.clientX/window.innerWidth-0.5,yP=e.clientY/window.innerHeight-0.5,moveX=xP*40,moveY=yP*40;document.body.style.backgroundPosition=`${50+moveX}% ${50+moveY}%`;});
+function dragElement(el,handle){let p1=0,p2=0,p3=0,p4=0;handle.onmousedown=e=>{e.preventDefault();p3=e.clientX;p4=e.clientY;document.onmouseup=closeDrag;document.onmousemove=elementDrag;};function elementDrag(e){e.preventDefault();p1=p3-e.clientX;p2=p4-e.clientY;p3=e.clientX;p4=e.clientY;el.style.top=(el.offsetTop-p2)+"px";el.style.left=(el.offsetLeft-p1)+"px";}function closeDrag(){document.onmouseup=null;document.onmousemove=null;}}
+document.querySelectorAll('.widget').forEach(w=>{dragElement(w,w.querySelector('.widget-header'));w.addEventListener('click',playClickSound);});
+const darkToggle=document.getElementById('darkToggle'),body=document.body;if(localStorage.getItem('theme')==='dark')body.classList.add('dark');function updateIcon(){darkToggle.innerHTML=body.classList.contains('dark')?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';}updateIcon();darkToggle.addEventListener('click',()=>{body.classList.toggle('dark');localStorage.setItem('theme',body.classList.contains('dark')?'dark':'light');updateIcon();playClickSound();});
+function makeDraggable(el){const header=el.querySelector('.window-header');let oX,oY,isDrag=false,ifrm=el.querySelector('iframe');header.addEventListener('mousedown',e=>{isDrag=true;oX=e.clientX-el.offsetLeft;oY=e.clientY-el.offsetTop;el.style.cursor='grabbing';if(ifrm)ifrm.style.pointerEvents='none';});document.addEventListener('mousemove',e=>{if(isDrag){el.style.left=Math.max(0,Math.min(e.clientX-oX,window.innerWidth-el.offsetWidth))+'px';el.style.top=Math.max(0,Math.min(e.clientY-oY,window.innerHeight-el.offsetHeight-60))+'px';}});document.addEventListener('mouseup',()=>{isDrag=false;el.style.cursor='default';if(ifrm)ifrm.style.pointerEvents='auto';});}
+function openApp(url){playClickSound();const w=document.createElement('div');w.classList.add('window');w.style.width='500px';w.style.height='400px';w.style.top='50px';w.style.left='50px';w.style.position='absolute';w.innerHTML=`<div class="window-header"><button class="close-btn" onclick="this.parentElement.parentElement.remove(); playClickSound();">×</button></div><iframe src="${url}" style="width:100%;height:calc(100% - 35px);border:none;border-radius:0 0 30px 30px;"></iframe>`;document.body.appendChild(w);makeDraggable(w);w.style.transform='scale(0.9) translateY(-20px)';w.style.opacity='0';setTimeout(()=>{w.style.transition='all 0.3s ease';w.style.transform='scale(1) translateY(0)';w.style.opacity='1';},10);}
+const ambience=document.getElementById('ambience');document.addEventListener('click',()=>{if(ambience.muted){ambience.muted=false;ambience.play();}},{once:true});
+document.querySelectorAll('button').forEach(b=>b.addEventListener('click',playClickSound));
+function buildCalendar(){const cal=document.getElementById('calendar'),now=new Date(),monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"],year=now.getFullYear(),month=now.getMonth(),firstDay=new Date(year,month,1).getDay(),daysInMonth=new Date(year,month+1,0).getDate();let html=`<h3 style="text-align:center;margin:0 0 10px;">${monthNames[month]} ${year}</h3><table><tr>`;const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];for(let d of days)html+=`<th>${d}</th>`;html+=`</tr><tr>`;for(let i=0;i<firstDay;i++)html+=`<td></td>`;for(let day=1;day<=daysInMonth;day++){const today=day===now.getDate()?'style="background:rgba(255,255,255,0.3);border-radius:6px;"':'';html+=`<td ${today}>${day}</td>`;if((day+firstDay)%7===0)html+=`</tr><tr>`;}html+=`</tr></table>`;cal.innerHTML=html;cal.querySelectorAll('td').forEach(td=>{td.addEventListener('click',()=>{if(td.textContent.trim()){playClickSound();alert(\`Selected: \${monthNames[month]} \${td.textContent}, \${year}\`);}});});}
+document.getElementById('clock').addEventListener('click',()=>{const cal=document.getElementById('calendar');if(cal.style.display==='flex'){cal.style.display='none';}else{buildCalendar();cal.style.display='flex';}});
+document.addEventListener('click',e=>{const cal=document.getElementById('calendar'),clk=document.getElementById('clock');if(cal.style.display==='flex'&&!clk.contains(e.target)&&!cal.contains(e.target))cal.style.display='none';});
 </script>
 </body>
 </html>
