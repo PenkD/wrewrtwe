@@ -70,6 +70,7 @@ body {
   padding:0 20px;
   box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
   justify-content:space-between;
+  box-sizing:border-box;
 }
 .taskbar-left, .taskbar-right {
   display:flex;
@@ -176,6 +177,52 @@ body {
 #clock {
   font-weight:bold;
   color:#fff;
+  padding:0 10px;
+  cursor:pointer;
+  user-select:none;
+}
+#calendar {
+  position:fixed;
+  bottom:70px;
+  right:20px;
+  width:280px;
+  background:rgba(255,255,255,0.9);
+  border:2px solid #ff7eb3;
+  border-radius:12px;
+  backdrop-filter:blur(15px);
+  box-shadow:0 5px 20px rgba(0,0,0,0.5);
+  padding:15px;
+  display:none;
+  flex-direction:column;
+  color:#000;
+  z-index:100;
+  animation:fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1; transform:translateY(0);}
+}
+#calendar table {
+  width:100%;
+  border-collapse:collapse;
+  text-align:center;
+}
+#calendar th {
+  padding:5px 0;
+  font-weight:bold;
+}
+#calendar td {
+  padding:5px 0;
+  border-radius:6px;
+  transition:background 0.2s;
+}
+#calendar td:hover {
+  background:rgba(255,255,255,0.3);
+}
+body.dark #calendar {
+  background:rgba(0,0,0,0.9);
+  border:2px solid #65d6ce;
+  color:#fff;
 }
 .widget {
   position:absolute;
@@ -183,7 +230,6 @@ body {
   height:120px;
   background: rgba(255,255,255,0.15);
   backdrop-filter: blur(20px) saturate(200%);
-  -webkit-backdrop-filter: blur(20px) saturate(200%);
   border-radius:20px;
   display:flex;
   justify-content:center;
@@ -279,6 +325,7 @@ body.dark .close-btn { color:#fff; background: rgba(255,255,255,0.1); }
   <button onclick="alert('Three opened')"><i class="fas fa-folder"></i> Three</button>
   <button onclick="alert('Four opened')"><i class="fas fa-cogs"></i> Four</button>
 </div>
+<div id="calendar"></div>
 <div class="taskbar">
   <div class="taskbar-left" id="taskbarApps">
     <button id="startBtn"><i class="fab fa-windows"></i></button>
@@ -307,118 +354,48 @@ function updateClock(){
   const seconds = now.getSeconds().toString().padStart(2,'0');
   document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
 }
-setInterval(updateClock,1000);
-updateClock();
-document.addEventListener('mousemove', e => {
-  const xPercent = e.clientX / window.innerWidth - 0.5;
-  const yPercent = e.clientY / window.innerHeight - 0.5;
-  const moveX = xPercent * 40;
-  const moveY = yPercent * 40;
-  document.body.style.backgroundPosition = `${50 + moveX}% ${50 + moveY}%`;
+setInterval(updateClock,1000);updateClock();
+function buildCalendar(){
+  const calendar=document.getElementById('calendar');
+  const now=new Date();
+  const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const year=now.getFullYear();
+  const month=now.getMonth();
+  const firstDay=new Date(year,month,1).getDay();
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  let html=`<h3 style="text-align:center;margin:0 0 10px;">${monthNames[month]} ${year}</h3><table><tr>`;
+  const dayNames=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  for(let d of dayNames){html+=`<th>${d}</th>`;}
+  html+=`</tr><tr>`;
+  for(let i=0;i<firstDay;i++)html+=`<td></td>`;
+  for(let day=1;day<=daysInMonth;day++){
+    const todayClass=day===now.getDate()?'style="background:rgba(255,255,255,0.3);border-radius:6px;"':'';
+    html+=`<td ${todayClass}>${day}</td>`;
+    if((day+firstDay)%7===0)html+=`</tr><tr>`;
+  }
+  html+=`</tr></table>`;
+  calendar.innerHTML=html;
+}
+const clock=document.getElementById('clock');
+const calendar=document.getElementById('calendar');
+clock.addEventListener('click',()=>{
+  if(calendar.style.display==='flex'){calendar.style.display='none';}
+  else{buildCalendar();calendar.style.display='flex';}
+});
+document.addEventListener('click',e=>{
+  if(!calendar.contains(e.target)&&e.target!==clock)calendar.style.display='none';
 });
 const clickSound = new Audio('click.mp3');
-function playClickSound(){
-  clickSound.currentTime = 0;
-  clickSound.play();
-}
-const widgets = document.querySelectorAll('.widget');
-widgets.forEach(widget => {
-  dragElement(widget, widget.querySelector('.widget-header'));
-  widget.addEventListener('click', () => playClickSound());
-});
-function dragElement(elmnt, handle) {
-  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  handle.onmousedown = dragMouseDown;
-  function dragMouseDown(e) {
-    e.preventDefault();
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    document.onmousemove = elementDrag;
-  }
-  function elementDrag(e) {
-    e.preventDefault();
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-  }
-  function closeDragElement() {
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
-}
-const darkToggle = document.getElementById('darkToggle');
-const body = document.body;
-if (localStorage.getItem('theme') === 'dark') body.classList.add('dark');
-function updateIcon(){
-  darkToggle.innerHTML = body.classList.contains('dark') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-}
+function playClickSound(){clickSound.currentTime=0;clickSound.play();}
+const widgets=document.querySelectorAll('.widget');
+widgets.forEach(widget=>{dragElement(widget,widget.querySelector('.widget-header'));widget.addEventListener('click',()=>playClickSound());});
+function dragElement(elmnt,handle){let pos1=0,pos2=0,pos3=0,pos4=0;handle.onmousedown=dragMouseDown;function dragMouseDown(e){e.preventDefault();pos3=e.clientX;pos4=e.clientY;document.onmouseup=closeDragElement;document.onmousemove=elementDrag;}function elementDrag(e){e.preventDefault();pos1=pos3-e.clientX;pos2=pos4-e.clientY;pos3=e.clientX;pos4=e.clientY;elmnt.style.top=(elmnt.offsetTop-pos2)+"px";elmnt.style.left=(elmnt.offsetLeft-pos1)+"px";}function closeDragElement(){document.onmouseup=null;document.onmousemove=null;}}
+const darkToggle=document.getElementById('darkToggle');const body=document.body;if(localStorage.getItem('theme')==='dark')body.classList.add('dark');
+function updateIcon(){darkToggle.innerHTML=body.classList.contains('dark')?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';}
 updateIcon();
-darkToggle.addEventListener('click', () => {
-  body.classList.toggle('dark');
-  localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
-  updateIcon();
-  playClickSound();
-});
-function makeDraggable(el){
-  const header = el.querySelector('.window-header');
-  let offsetX, offsetY, isDragging=false;
-  let iframe = el.querySelector('iframe');
-  header.addEventListener('mousedown', e => {
-    isDragging = true;
-    offsetX = e.clientX - el.offsetLeft;
-    offsetY = e.clientY - el.offsetTop;
-    el.style.cursor = 'grabbing';
-    if(iframe) iframe.style.pointerEvents = 'none';
-  });
-  document.addEventListener('mousemove', e => {
-    if(isDragging){
-      el.style.left = Math.max(0, Math.min(e.clientX - offsetX, window.innerWidth - el.offsetWidth)) + 'px';
-      el.style.top = Math.max(0, Math.min(e.clientY - offsetY, window.innerHeight - el.offsetHeight - 60)) + 'px';
-    }
-  });
-  document.addEventListener('mouseup', () => {
-    isDragging = false;
-    el.style.cursor = 'default';
-    if(iframe) iframe.style.pointerEvents = 'auto';
-  });
-}
-function openApp(url){
-  playClickSound();
-  const appWindow=document.createElement('div');
-  appWindow.classList.add('window');
-  appWindow.style.width='500px';
-  appWindow.style.height='400px';
-  appWindow.style.top='50px';
-  appWindow.style.left='50px';
-  appWindow.style.position='absolute';
-  appWindow.innerHTML=`
-    <div class="window-header">
-      <button class="close-btn" onclick="this.parentElement.parentElement.remove(); playClickSound();">×</button>
-    </div>
-    <iframe src="${url}" style="width:100%; height:calc(100% - 35px); border:none; border-radius:0 0 20px 20px;"></iframe>
-  `;
-  document.body.appendChild(appWindow);
-  makeDraggable(appWindow);
-  appWindow.style.transform='scale(0.9) translateY(-20px)';
-  appWindow.style.opacity='0';
-  setTimeout(()=>{
-    appWindow.style.transition='all 0.3s ease';
-    appWindow.style.transform='scale(1) translateY(0)';
-    appWindow.style.opacity='1';
-  },10);
-}
-const ambience = document.getElementById('ambience');
-document.addEventListener('click', () => {
-  if(ambience.muted){
-    ambience.muted = false;
-    ambience.play();
-  }
-}, { once: true });
-document.querySelectorAll('button').forEach(btn => btn.addEventListener('click', playClickSound));
+darkToggle.addEventListener('click',()=>{body.classList.toggle('dark');localStorage.setItem('theme',body.classList.contains('dark')?'dark':'light');updateIcon();playClickSound();});
+function makeDraggable(el){const header=el.querySelector('.window-header');let offsetX,offsetY,isDragging=false;let iframe=el.querySelector('iframe');header.addEventListener('mousedown',e=>{isDragging=true;offsetX=e.clientX-el.offsetLeft;offsetY=e.clientY-el.offsetTop;el.style.cursor='grabbing';if(iframe)iframe.style.pointerEvents='none';});document.addEventListener('mousemove',e=>{if(isDragging){el.style.left=Math.max(0,Math.min(e.clientX-offsetX,window.innerWidth-el.offsetWidth))+'px';el.style.top=Math.max(0,Math.min(e.clientY-offsetY,window.innerHeight-el.offsetHeight-60))+'px';}});document.addEventListener('mouseup',()=>{isDragging=false;el.style.cursor='default';if(iframe)iframe.style.pointerEvents='auto';});}
+function openApp(url){playClickSound();const appWindow=document.createElement('div');appWindow.classList.add('window');appWindow.style.width='500px';appWindow.style.height='400px';appWindow.style.top='50px';appWindow.style.left='50px';appWindow.style.position='absolute';appWindow.innerHTML=`<div class="window-header"><button class="close-btn" onclick="this.parentElement.parentElement.remove(); playClickSound();">×</button></div><iframe src="${url}" style="width:100%;height:calc(100% - 35px);border:none;border-radius:0 0 30px 30px;"></iframe>`;document.body.appendChild(appWindow);makeDraggable(appWindow);}
 </script>
 </body>
 </html>
