@@ -10,12 +10,6 @@
 :root {
   --primary: #ff7eb3;
   --secondary: #65d6ce;
-  --accent: #f6d365;
-  --bg-light: #f0f8ff;
-  --bg-dark: #1a1a2e;
-  --text-light: #111;
-  --text-dark: #fff;
-  --card-radius: 25px;
   --button-radius: 20px;
 }
 
@@ -27,7 +21,7 @@ body {
   background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
   background-size: 400% 400%;
   animation: gradientMove 15s ease infinite;
-  color: var(--text-light);
+  color: #111;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,7 +30,7 @@ body {
 }
 body.dark {
   background: linear-gradient(135deg, #1e1e2f, #282830, #111, #222233);
-  color: var(--text-dark);
+  color: #fff;
 }
 
 @keyframes gradientMove {
@@ -51,8 +45,7 @@ body.dark {
   height: 80vh;
   background: rgba(255,255,255,0.15);
   backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-radius: var(--card-radius);
+  border-radius: 25px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.2);
   overflow-y: auto;
   padding: 20px;
@@ -61,10 +54,7 @@ body.dark {
   align-items: center;
   transition: transform 0.3s ease;
 }
-body.dark .card {
-  background: rgba(0,0,0,0.3);
-  color: #fff;
-}
+body.dark .card { background: rgba(0,0,0,0.3); }
 
 .card h1 {
   font-size: 2.5rem;
@@ -93,13 +83,11 @@ body.dark .card {
 }
 .download-btn {
   width: 160px;
-  height: 160px;
   background: rgba(255,255,255,0.25);
-  border-radius: 20px;
+  border-radius: var(--button-radius);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   padding: 10px;
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
@@ -116,12 +104,42 @@ body.dark .card {
   height: 110px;
   object-fit: cover;
   border-radius: 12px;
+  margin-bottom: 8px;
 }
 .download-btn span {
   background: rgba(255,255,255,0.25);
   padding: 4px 8px;
   border-radius: 12px;
   text-align: center;
+  margin-bottom: 5px;
+}
+.download-btn .btn-row {
+  display: flex;
+  width: 100%;
+  gap: 5px;
+  justify-content: center;
+}
+.download-btn .btn-row button {
+  flex: 1;
+  padding: 5px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: bold;
+  transition: background 0.2s, transform 0.2s;
+}
+.download-btn .btn-row button.download-main {
+  background: var(--primary);
+  color: #fff;
+}
+.download-btn .btn-row button.download-source {
+  background: var(--secondary);
+  color: #fff;
+}
+.download-btn .btn-row button:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
 }
 
 /* DARK MODE TOGGLE */
@@ -153,7 +171,6 @@ body.dark .card {
 }
 body.dark .particle { background: rgba(200,200,255,0.5); }
 @keyframes float { 0%{transform:translateY(0)} 50%{transform:translateY(-15px)} 100%{transform:translateY(0)} }
-
 </style>
 </head>
 <body>
@@ -162,26 +179,35 @@ body.dark .particle { background: rgba(200,200,255,0.5); }
   <h1>Downloads</h1>
   <input type="text" class="search-input" placeholder="Search downloads..." id="searchInput">
   <div class="downloads" id="downloadsContainer">
-    <div class="download-btn" onclick="openLink('https://github.com/PenkD/FileOrganizerInC-/releases/download/Latest/FileOrganizer.exe')">
-      <img src="https://cdn3.iconfinder.com/data/icons/files-128/24/file-512.png" alt="Download 1">
+
+    <!-- Example button with two buttons inside -->
+    <div class="download-btn">
+      <img src="https://cdn3.iconfinder.com/data/icons/files-128/24/file-512.png" alt="C# File Organizer">
       <span>C# File Organizer</span>
+      <div class="btn-row">
+        <button class="download-main" onclick="openLink('https://github.com/PenkD/FileOrganizerInC-/releases/download/Latest/FileOrganizer.exe')">Download</button>
+        <button class="download-source" onclick="openLink('https://raw.githubusercontent.com/PenkD/FileOrganizerInC-/refs/heads/main/codeMain.cs')">Source</button>
+      </div>
     </div>
-    <div class="download-btn" onclick="openLink('/download2')">
+
+    <div class="download-btn">
       <img src="https://via.placeholder.com/150" alt="Download 2">
       <span>Download 2</span>
+      <div class="btn-row">
+        <button class="download-main" onclick="openLink('/download2')">Download</button>
+        <button class="download-source" onclick="openLink('/source2')">Source</button>
+      </div>
     </div>
-    <div class="download-btn" onclick="openLink('/download3')">
+
+    <div class="download-btn">
       <img src="https://via.placeholder.com/150" alt="Download 3">
       <span>Download 3</span>
+      <div class="btn-row">
+        <button class="download-main" onclick="openLink('/download3')">Download</button>
+        <button class="download-source" onclick="openLink('/source3')">Source</button>
+      </div>
     </div>
-    <div class="download-btn" onclick="openLink('/download4')">
-      <img src="https://via.placeholder.com/150" alt="Download 4">
-      <span>Download 4</span>
-    </div>
-    <div class="download-btn" onclick="openLink('/download5')">
-      <img src="https://via.placeholder.com/150" alt="Download 5">
-      <span>Download 5</span>
-    </div>
+
   </div>
 </div>
 
@@ -231,7 +257,7 @@ darkToggle.addEventListener('click', () => {
   darkToggle.innerHTML = body.classList.contains('dark') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
 });
 
-// Download buttons click sound
+// Open link with click sound
 function openLink(url){
   clickSound.currentTime=0;
   clickSound.play();
@@ -239,10 +265,10 @@ function openLink(url){
 }
 
 // Search filter
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded',()=> {
   const searchInput = document.getElementById('searchInput');
   const downloadsContainer = document.getElementById('downloadsContainer');
-  searchInput.addEventListener('input',()=>{
+  searchInput.addEventListener('input',()=> {
     const filter = searchInput.value.toLowerCase();
     Array.from(downloadsContainer.children).forEach(btn=>{
       const text = btn.querySelector('span').textContent.toLowerCase();
@@ -251,7 +277,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
 });
 
-// Background movement based on cursor
+// Background movement
 document.addEventListener('mousemove', e=>{
   const xPercent = e.clientX/window.innerWidth - 0.5;
   const yPercent = e.clientY/window.innerHeight - 0.5;
