@@ -192,9 +192,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Open links
+// Open links in the same tab
 function openLink(url){
-  window.open(url,'_blank');
+  window.location.href = url; // <-- opens in same tab now
 }
 </script>
 </body>
