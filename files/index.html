@@ -124,71 +124,73 @@ footer {
 }
 body.dark footer { color: rgba(255,255,255,0.5); }
 
-/* MODAL FOR TXT VIEW */
+/* MODAL */
 #modal {
   position: fixed;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(15px);
+  padding: 30px;
   border-radius: var(--glass-radius);
   max-width: 80%;
   max-height: 80%;
-  padding: 20px;
+  overflow-y: auto;
   display: none;
   z-index: 200;
-  color: var(--text-light);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  display: flex;
-  flex-direction: column;
+  color: #111;
 }
 
-body.dark #modal { 
-  background: rgba(0,0,0,0.4); 
-  color: var(--text-dark);
-}
+body.dark #modal { background: rgba(0,0,0,0.85); color: #fff; }
 
 #modalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-  font-weight: bold;
 }
 
-#modalButtons {
-  display: flex;
-  gap: 10px;
+#fileContent {
+  white-space: pre-wrap;
+  font-family: monospace;
+  font-size: 1rem;
+  padding: 10px;
+  border-radius: var(--glass-radius);
+  background: rgba(255,255,255,0.1);
+  max-height: 60vh;
+  overflow-y: auto;
   margin-bottom: 10px;
 }
 
+body.dark #fileContent {
+  background: rgba(0,0,0,0.3);
+}
+
 .modalBtn {
-  padding: 8px 15px;
+  margin: 5px;
+  padding: 8px 12px;
   border-radius: var(--button-radius);
   border: none;
   cursor: pointer;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: #fff;
   font-weight: bold;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .modalBtn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-#fileContent {
-  background: rgba(255,255,255,0.05);
-  padding: 15px;
-  border-radius: 15px;
-  overflow-x: auto;
-  max-height: 60vh;
-  font-family: 'Courier New', monospace;
-  font-size: 1rem;
-  white-space: pre-wrap;
-  flex: 1;
+#closeModal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  background: none;
+  border: none;
   color: inherit;
 }
 </style>
@@ -197,22 +199,20 @@ body.dark #modal {
 
 <button id="darkToggle"><i class="fas fa-moon"></i></button>
 
-<h1>Repository</h1>
-
+<h1>Text File Hub</h1>
 <div id="fileContainer"></div>
 
-<!-- MODAL -->
 <div id="modal">
   <div id="modalHeader">
-    <span id="fileName"></span>
+    <div>
+      <button class="modalBtn" id="copyBtn">Copy</button>
+      <button class="modalBtn" id="selectAllBtn">Select All</button>
+      <button class="modalBtn" id="clearBtn">Clear</button>
+      <button class="modalBtn" id="homeBtn">Home</button>
+    </div>
     <button id="closeModal"><i class="fas fa-times"></i></button>
   </div>
-  <div id="modalButtons">
-    <button class="modalBtn" id="copyBtn"><i class="fas fa-copy"></i> Copy</button>
-    <button class="modalBtn" id="selectAllBtn"><i class="fas fa-mouse-pointer"></i> Select All</button>
-    <button class="modalBtn" id="downloadBtn"><i class="fas fa-download"></i> Download</button>
-  </div>
-  <pre id="fileContent"></pre>
+  <div id="fileContent"></div>
 </div>
 
 <footer>&copy; 2025 Nefarious Hub</footer>
@@ -229,11 +229,13 @@ const files = [
 const container = document.getElementById("fileContainer");
 const modal = document.getElementById("modal");
 const fileContent = document.getElementById("fileContent");
-const fileName = document.getElementById("fileName");
 const closeModal = document.getElementById("closeModal");
 const copyBtn = document.getElementById("copyBtn");
 const selectAllBtn = document.getElementById("selectAllBtn");
-const downloadBtn = document.getElementById("downloadBtn");
+const clearBtn = document.getElementById("clearBtn");
+const homeBtn = document.getElementById("homeBtn");
+
+modal.style.display = "none"; // hide by default
 
 files.forEach(file => {
   const card = document.createElement("div");
@@ -244,8 +246,7 @@ files.forEach(file => {
       .then(res => res.text())
       .then(text => {
         fileContent.textContent = text;
-        fileName.textContent = file.name;
-        modal.style.display = "flex";
+        modal.style.display = "block";
         document.getElementById('clickSound').play();
       })
       .catch(err => alert("Failed to load file"));
@@ -255,7 +256,6 @@ files.forEach(file => {
 
 closeModal.onclick = () => modal.style.display = "none";
 
-// Modal button functions
 copyBtn.onclick = () => navigator.clipboard.writeText(fileContent.textContent);
 selectAllBtn.onclick = () => {
   const range = document.createRange();
@@ -264,13 +264,8 @@ selectAllBtn.onclick = () => {
   sel.removeAllRanges();
   sel.addRange(range);
 };
-downloadBtn.onclick = () => {
-  const blob = new Blob([fileContent.textContent], {type: "text/plain"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = fileName.textContent;
-  a.click();
-};
+clearBtn.onclick = () => window.getSelection().removeAllRanges();
+homeBtn.onclick = () => window.location.href = "index.html";
 
 document.addEventListener("DOMContentLoaded", () => {
   const darkToggle = document.getElementById('darkToggle');
@@ -293,7 +288,6 @@ document.addEventListener("DOMContentLoaded", () => {
     clickSound.currentTime = 0; clickSound.play();
   });
 
-  // Bubble animation
   const bubbles = [];
   const bubbleCount = 35;
   for(let i=0;i<bubbleCount;i++){
@@ -339,6 +333,5 @@ document.addEventListener("DOMContentLoaded", () => {
   animateBubbles();
 });
 </script>
-
 </body>
 </html>
