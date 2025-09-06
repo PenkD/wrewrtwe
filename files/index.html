@@ -50,7 +50,7 @@ body.dark {
 h1 {
   font-size: 3rem;
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
   background: linear-gradient(90deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -124,12 +124,12 @@ footer {
 }
 body.dark footer { color: rgba(255,255,255,0.5); }
 
-/* MODAL */
+/* MODAL FOR TXT VIEW */
 #modal {
   position: fixed;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.95);
   backdrop-filter: blur(15px);
   padding: 30px;
   border-radius: var(--glass-radius);
@@ -138,49 +138,31 @@ body.dark footer { color: rgba(255,255,255,0.5); }
   overflow-y: auto;
   display: none;
   z-index: 200;
+  white-space: pre-wrap;
   color: #111;
 }
 
 body.dark #modal { background: rgba(0,0,0,0.85); color: #fff; }
 
-#modalHeader {
+#modalBtns {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-#fileContent {
-  white-space: pre-wrap;
-  font-family: monospace;
-  font-size: 1rem;
-  padding: 10px;
-  border-radius: var(--glass-radius);
-  background: rgba(255,255,255,0.1);
-  max-height: 60vh;
-  overflow-y: auto;
-  margin-bottom: 10px;
-}
-
-body.dark #fileContent {
-  background: rgba(0,0,0,0.3);
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
 .modalBtn {
-  margin: 5px;
   padding: 8px 12px;
   border-radius: var(--button-radius);
   border: none;
   cursor: pointer;
   font-weight: bold;
-  color: #fff;
   background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #fff;
   transition: transform 0.2s, box-shadow 0.2s;
 }
-
 .modalBtn:hover {
   transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
 #closeModal {
@@ -193,29 +175,46 @@ body.dark #fileContent {
   border: none;
   color: inherit;
 }
+
+/* HOME BUTTON */
+#homeBtnMain {
+  margin-bottom: 30px;
+  padding: 10px 18px;
+  border-radius: var(--button-radius);
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #fff;
+  font-size: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+#homeBtnMain:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
 </style>
 </head>
 <body>
 
 <button id="darkToggle"><i class="fas fa-moon"></i></button>
 
-<h1>Text File Hub</h1>
+<h1>Repository</h1>
+<button id="homeBtnMain">Home</button>
+
 <div id="fileContainer"></div>
 
 <div id="modal">
-  <div id="modalHeader">
-    <div>
-      <button class="modalBtn" id="copyBtn">Copy</button>
-      <button class="modalBtn" id="selectAllBtn">Select All</button>
-      <button class="modalBtn" id="clearBtn">Clear</button>
-      <button class="modalBtn" id="homeBtn">Home</button>
-    </div>
-    <button id="closeModal"><i class="fas fa-times"></i></button>
+  <div id="modalBtns">
+    <button class="modalBtn" id="copyBtn">Copy</button>
+    <button class="modalBtn" id="selectBtn">Select All</button>
+    <button class="modalBtn" id="pasteBtn">Paste</button>
   </div>
+  <button id="closeModal"><i class="fas fa-times"></i></button>
   <div id="fileContent"></div>
 </div>
 
-<footer>&copy; 2025 Nefarious Hub</footer>
+<footer>&copy; 2025 :D /footer>
 
 <audio id="clickSound" src="click.mp3"></audio>
 
@@ -231,11 +230,11 @@ const modal = document.getElementById("modal");
 const fileContent = document.getElementById("fileContent");
 const closeModal = document.getElementById("closeModal");
 const copyBtn = document.getElementById("copyBtn");
-const selectAllBtn = document.getElementById("selectAllBtn");
-const clearBtn = document.getElementById("clearBtn");
-const homeBtn = document.getElementById("homeBtn");
+const pasteBtn = document.getElementById("pasteBtn");
+const selectBtn = document.getElementById("selectBtn");
+const homeBtnMain = document.getElementById("homeBtnMain");
 
-modal.style.display = "none"; // hide by default
+homeBtnMain.onclick = () => window.location.href = "index.html"; // change to your home page
 
 files.forEach(file => {
   const card = document.createElement("div");
@@ -257,15 +256,17 @@ files.forEach(file => {
 closeModal.onclick = () => modal.style.display = "none";
 
 copyBtn.onclick = () => navigator.clipboard.writeText(fileContent.textContent);
-selectAllBtn.onclick = () => {
+selectBtn.onclick = () => {
   const range = document.createRange();
   range.selectNodeContents(fileContent);
   const sel = window.getSelection();
   sel.removeAllRanges();
   sel.addRange(range);
 };
-clearBtn.onclick = () => window.getSelection().removeAllRanges();
-homeBtn.onclick = () => window.location.href = "index.html";
+pasteBtn.onclick = async () => {
+  const text = await navigator.clipboard.readText();
+  fileContent.textContent += text;
+};
 
 document.addEventListener("DOMContentLoaded", () => {
   const darkToggle = document.getElementById('darkToggle');
@@ -333,5 +334,6 @@ document.addEventListener("DOMContentLoaded", () => {
   animateBubbles();
 });
 </script>
+
 </body>
 </html>
