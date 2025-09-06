@@ -129,9 +129,9 @@ body.dark footer { color: rgba(255,255,255,0.5); }
   position: fixed;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.95);
   backdrop-filter: blur(15px);
-  padding: 30px;
+  padding: 25px;
   border-radius: var(--glass-radius);
   max-width: 80%;
   max-height: 80%;
@@ -140,18 +140,52 @@ body.dark footer { color: rgba(255,255,255,0.5); }
   z-index: 200;
   white-space: pre-wrap;
   color: #111;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-body.dark #modal { background: rgba(0,0,0,0.85); color: #fff; }
+body.dark #modal { background: rgba(0,0,0,0.9); color: #fff; }
+
+#modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+#modalButtons {
+  margin-bottom: 15px;
+}
+
+.modalBtn {
+  margin-right: 10px;
+  padding: 8px 15px;
+  border-radius: var(--button-radius);
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #fff;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.modalBtn:hover { transform: scale(1.05); }
+
+#fileContent {
+  background: rgba(255,255,255,0.1);
+  padding: 15px;
+  border-radius: 15px;
+  overflow-x: auto;
+  max-height: 60vh;
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  white-space: pre-wrap;
+}
 
 #closeModal {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 1.2rem;
-  cursor: pointer;
   background: none;
   border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
   color: inherit;
 }
 </style>
@@ -165,8 +199,16 @@ body.dark #modal { background: rgba(0,0,0,0.85); color: #fff; }
 <div id="fileContainer"></div>
 
 <div id="modal">
-  <button id="closeModal"><i class="fas fa-times"></i></button>
-  <div id="fileContent"></div>
+  <div id="modalHeader">
+    <span id="fileName"></span>
+    <button id="closeModal"><i class="fas fa-times"></i></button>
+  </div>
+  <div id="modalButtons">
+    <button class="modalBtn" id="copyBtn"><i class="fas fa-copy"></i> Copy</button>
+    <button class="modalBtn" id="selectAllBtn"><i class="fas fa-mouse-pointer"></i> Select All</button>
+    <button class="modalBtn" id="downloadBtn"><i class="fas fa-download"></i> Download</button>
+  </div>
+  <pre id="fileContent"></pre>
 </div>
 
 <footer>&copy; 2025 Nefarious Hub</footer>
@@ -184,6 +226,10 @@ const container = document.getElementById("fileContainer");
 const modal = document.getElementById("modal");
 const fileContent = document.getElementById("fileContent");
 const closeModal = document.getElementById("closeModal");
+const fileNameSpan = document.getElementById('fileName');
+const copyBtn = document.getElementById('copyBtn');
+const selectAllBtn = document.getElementById('selectAllBtn');
+const downloadBtn = document.getElementById('downloadBtn');
 
 files.forEach(file => {
   const card = document.createElement("div");
@@ -194,6 +240,7 @@ files.forEach(file => {
       .then(res => res.text())
       .then(text => {
         fileContent.textContent = text;
+        fileNameSpan.textContent = file.name;
         modal.style.display = "block";
         document.getElementById('clickSound').play();
       })
@@ -203,6 +250,31 @@ files.forEach(file => {
 });
 
 closeModal.onclick = () => modal.style.display = "none";
+
+// Modal buttons
+copyBtn.onclick = () => {
+  navigator.clipboard.writeText(fileContent.textContent)
+    .then(() => alert("Copied to clipboard!"))
+    .catch(() => alert("Copy failed."));
+};
+
+selectAllBtn.onclick = () => {
+  const range = document.createRange();
+  range.selectNodeContents(fileContent);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+};
+
+downloadBtn.onclick = () => {
+  const blob = new Blob([fileContent.textContent], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = fileNameSpan.textContent;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+};
 
 document.addEventListener("DOMContentLoaded", () => {
   const darkToggle = document.getElementById('darkToggle');
